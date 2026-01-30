@@ -14,10 +14,9 @@ public record HouseholdPolicyDto
     public required PropertyDto Property { get; init; }
     public required IReadOnlyCollection<PaymentDto> Payments { get; init; }
 
-    public HouseholdPolicy ToDomain() => new HouseholdPolicy()
+    public HouseholdPolicy ToDomain() => new()
     {
-        UniqueReference =
-            UniqueReference ?? throw new InvalidOperationException("UniqueReference cannot be null"),
+        UniqueReference = UniqueReference ?? Guid.Empty,
         StartDate = StartDate,
         EndDate = EndDate,
         Amount = Amount,

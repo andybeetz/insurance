@@ -1,4 +1,4 @@
-using Insurance.Api;
+using Insurance.Api.Domain;
 using Insurance.Api.Dtos.v1;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +18,7 @@ if (app.Environment.IsDevelopment())
 app.MapPost("/policies/v1/household",
     (HouseholdPolicyDto policy, ISellHouseholdPolicies policySeller) =>
     {
-        var result = policySeller.Sell(policy);
+        var result = policySeller.Sell(policy.ToDomain());
 
         if (result.IsSuccess)
             return Results.Created($"/policies/v1/household/{policy.UniqueReference}",
