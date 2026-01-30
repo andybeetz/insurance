@@ -29,8 +29,7 @@ public class InsuranceApiShould
     public async Task SellAHouseholdPolicy()
     {
         var expectedPolicy = CreateAHouseholdPolicyDto();
-        var newPolicyRequest = expectedPolicy;
-        newPolicyRequest.UniqueReference = null;
+        var newPolicyRequest = expectedPolicy with { UniqueReference = null };
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/household", newPolicyRequest);
 
