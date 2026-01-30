@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using FakeItEasy;
+using Insurance.Api.Domain;
 using Insurance.Api.Dtos.v1;
 using Insurance.Api.Tests.Integration.Helpers;
 
@@ -10,12 +12,20 @@ public class InsuranceApiShould
 {
     private TestWebApplicationFactory<Program> _factory;
     private HttpClient _httpClient;
-    
+    private ISellHouseholdPolicies _policySeller;
+
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _factory = new  TestWebApplicationFactory<Program>();
+        _policySeller = A.Fake<ISellHouseholdPolicies>();
+        _factory = new TestWebApplicationFactory<Program>(_policySeller);
         _httpClient = _factory.CreateClient();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        Fake.Reset(_policySeller);
     }
     
     [OneTimeTearDown]
@@ -31,6 +41,9 @@ public class InsuranceApiShould
     {
         var expectedPolicy = CreateAHouseholdPolicyDto(policyReference);
         var newPolicyRequest = expectedPolicy with { UniqueReference = null };
+        
+        A.CallTo(() => _policySeller.Sell(A<HouseholdPolicyDto>._))
+            .ReturnsLazily(() => Resulting<HouseholdPolicy>.Success(expectedPolicy.ToDomain()));
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/household", newPolicyRequest);
 

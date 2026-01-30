@@ -1,3 +1,4 @@
+using Insurance.Api;
 using Insurance.Api.Dtos.v1;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +16,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapPost("/policies/v1/household",
-    (HouseholdPolicyDto policy) => Results.Created($"policies/v1/household/{policy.UniqueReference}",
-        policy with { UniqueReference = new Guid("020B67E9-8430-437B-A45A-F0BDE2061D37")})).WithName("SellHouseholdPolicy");
+    (HouseholdPolicyDto policy, ISellHouseholdPolicies policySeller) =>
+    {
+        var result = policySeller.Sell(policy);
+
+        if (result.IsSuccess)
+            return Results.Created($"/policies/v1/household/{policy.UniqueReference}",
+                policy with { UniqueReference = result.Value.UniqueReference });
+        
+        return Results.BadRequest(result.Error);
+    }).WithName("SellHouseholdPolicy");
 
 app.UseHttpsRedirection();
 
