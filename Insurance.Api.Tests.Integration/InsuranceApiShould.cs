@@ -25,10 +25,11 @@ public class InsuranceApiShould
         _httpClient.Dispose();
     }
 
-    [Test]
-    public async Task SellAHouseholdPolicy()
+    [TestCase("020B67E9-8430-437B-A45A-F0BDE2061D37")]
+    [TestCase("020B67E9-9999-437B-A45A-F0BDE2061D37")]
+    public async Task SellAHouseholdPolicy(string policyReference)
     {
-        var expectedPolicy = CreateAHouseholdPolicyDto();
+        var expectedPolicy = CreateAHouseholdPolicyDto(policyReference);
         var newPolicyRequest = expectedPolicy with { UniqueReference = null };
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/household", newPolicyRequest);
@@ -41,12 +42,12 @@ public class InsuranceApiShould
         });
     }
 
-    private static HouseholdPolicyDto CreateAHouseholdPolicyDto()
+    private static HouseholdPolicyDto CreateAHouseholdPolicyDto(string policyReferenceString)
     {
         var startDate = new DateOnly(2021, 05, 01);
         var endDate = startDate.AddDays(365);
         var dateOfBirth = new DateOnly(205, 05, 17);
-        var policyReference = new Guid("020B67E9-8430-437B-A45A-F0BDE2061D37");
+        var policyReference = new Guid(policyReferenceString);
         var paymentReference = new Guid("120B67E9-8430-437B-A45A-F0BDE2061D38");
         var autoRenew = true;
 
