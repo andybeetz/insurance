@@ -4,5 +4,5 @@ public record PaymentDto
 {
     public required Guid PaymentReference { get; init; }
     public required string PaymentType { get; init; }
-    public decimal Amount { get; init; }
+    public required decimal Amount { get; init; }
 }
