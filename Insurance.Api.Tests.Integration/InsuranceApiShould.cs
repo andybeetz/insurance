@@ -37,7 +37,7 @@ public class InsuranceApiShould
         {
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
             var soldPolicy = await response.Content.ReadFromJsonAsync<HouseholdPolicyDto>();
-            Assert.That(soldPolicy, Is.EqualTo(expectedPolicy));
+            Assert.That(soldPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
         });
     }
 
