@@ -28,6 +28,22 @@ public class InsuranceApiShould
     [Test]
     public async Task SellAHouseholdPolicy()
     {
+        var expectedPolicy = CreateAHouseholdPolicyDto();
+        var newPolicyRequest = expectedPolicy;
+        newPolicyRequest.UniqueReference = null;
+
+        var response = await _httpClient.PostAsJsonAsync("/policies/v1/household", newPolicyRequest);
+
+        await Assert.MultipleAsync(async () =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+            var soldPolicy = await response.Content.ReadFromJsonAsync<HouseholdPolicyDto>();
+            Assert.That(soldPolicy, Is.EqualTo(expectedPolicy));
+        });
+    }
+
+    private static HouseholdPolicyDto CreateAHouseholdPolicyDto()
+    {
         var startDate = new DateOnly(2021, 05, 01);
         var endDate = startDate.AddDays(365);
         var dateOfBirth = new DateOnly(205, 05, 17);
@@ -64,17 +80,6 @@ public class InsuranceApiShould
                 }
             ]
         };
-
-        var newPolicyRequest = expectedPolicy;
-        newPolicyRequest.UniqueReference = null;
-
-        var response = await _httpClient.PostAsJsonAsync("/policies/v1/household", newPolicyRequest);
-
-        await Assert.MultipleAsync(async () =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
-            var soldPolicy = await response.Content.ReadFromJsonAsync<HouseholdPolicyDto>();
-            Assert.That(soldPolicy, Is.EqualTo(expectedPolicy));
-        });
+        return expectedPolicy;
     }
 }
