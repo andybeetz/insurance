@@ -13,13 +13,15 @@ public class InsuranceApiShould
     private HttpClient _httpClient;
     private ISellHouseholdPolicies _houseHoldPolicySeller;
     private ISellBuyToLetPolicies _buyToLetPolicySeller;
+    private IRetrieveHouseholdPolicies _householdPolicyRetriever;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
         _houseHoldPolicySeller = A.Fake<ISellHouseholdPolicies>();
         _buyToLetPolicySeller = A.Fake<ISellBuyToLetPolicies>();
-        _factory = new TestWebApplicationFactory<Program>(_houseHoldPolicySeller, _buyToLetPolicySeller);
+        _householdPolicyRetriever = A.Fake<IRetrieveHouseholdPolicies>();
+        _factory = new TestWebApplicationFactory<Program>(_houseHoldPolicySeller, _buyToLetPolicySeller, _householdPolicyRetriever);
         _httpClient = _factory.CreateClient();
     }
 
@@ -28,6 +30,7 @@ public class InsuranceApiShould
     {
         Fake.Reset(_houseHoldPolicySeller);
         Fake.Reset(_buyToLetPolicySeller);
+        Fake.Reset(_householdPolicyRetriever);
     }
     
     [OneTimeTearDown]
@@ -74,6 +77,25 @@ public class InsuranceApiShould
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
             var soldPolicy = await response.Content.ReadFromJsonAsync<BuyToLetPolicyDto>();
             Assert.That(soldPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
+        });
+    }
+
+    [Test]
+    public async Task RetrieveAHouseholdPolicy()
+    {
+        var policyReference = Guid.NewGuid();
+        var expectedPolicy = CreateAHouseholdPolicyDto(policyReference.ToString());
+        
+        A.CallTo(() => _householdPolicyRetriever.Retrieve(policyReference))
+            .Returns(Resulting<HouseholdPolicyDto>.Success(expectedPolicy));
+
+        var response = await _httpClient.GetAsync($"/policies/v1/household/{policyReference}");
+
+        await Assert.MultipleAsync(async () =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            var retrievedPolicy = await response.Content.ReadFromJsonAsync<HouseholdPolicyDto>();
+            Assert.That(retrievedPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
         });
     }
 

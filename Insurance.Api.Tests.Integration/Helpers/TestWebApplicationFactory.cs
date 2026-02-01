@@ -10,11 +10,16 @@ public class TestWebApplicationFactory<TProgram>
 {
     private readonly ISellHouseholdPolicies _householdPolicySeller;
     private readonly ISellBuyToLetPolicies _buyToLetPolicySeller;
+    private readonly IRetrieveHouseholdPolicies _householdPolicyRetriever;
 
-    public TestWebApplicationFactory(ISellHouseholdPolicies householdPolicySeller, ISellBuyToLetPolicies buyToLetPolicySeller)
+    public TestWebApplicationFactory(
+        ISellHouseholdPolicies householdPolicySeller,
+        ISellBuyToLetPolicies buyToLetPolicySeller,
+        IRetrieveHouseholdPolicies householdPolicyRetriever)
     {
         _householdPolicySeller = householdPolicySeller;
         _buyToLetPolicySeller = buyToLetPolicySeller;
+        _householdPolicyRetriever = householdPolicyRetriever;
     }
     
     protected override IHost CreateHost(IHostBuilder builder)
@@ -28,6 +33,7 @@ public class TestWebApplicationFactory<TProgram>
         {
             services.AddSingleton(_householdPolicySeller);
             services.AddSingleton(_buyToLetPolicySeller);
+            services.AddSingleton(_householdPolicyRetriever);
         });
 
         return base.CreateHost(builder);
