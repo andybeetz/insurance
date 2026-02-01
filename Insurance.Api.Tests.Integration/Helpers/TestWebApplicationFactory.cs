@@ -10,7 +10,8 @@ public class TestWebApplicationFactory<TProgram>(
     ISellBuyToLetPolicies buyToLetPolicySeller,
     IRetrieveHouseholdPolicies householdPolicyRetriever,
     IRetrieveBuyToLetPolicies buyToLetPolicyRetriever,
-    ICancelBuyToLetPolicies buyToLetPolicyCanceller)
+    ICancelBuyToLetPolicies buyToLetPolicyCanceller,
+    ICancelHouseholdPolicies householdPolicyCanceller)
     : WebApplicationFactory<TProgram>
     where TProgram : class
 {
@@ -28,6 +29,7 @@ public class TestWebApplicationFactory<TProgram>(
             services.AddSingleton(householdPolicyRetriever);
             services.AddSingleton(buyToLetPolicyRetriever);
             services.AddSingleton(buyToLetPolicyCanceller);
+            services.AddSingleton(householdPolicyCanceller);
         });
 
         return base.CreateHost(builder);

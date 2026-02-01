@@ -16,6 +16,7 @@ public class InsuranceApiShould
     private IRetrieveHouseholdPolicies _householdPolicyRetriever;
     private IRetrieveBuyToLetPolicies _buyToLetPolicyRetriever;
     private ICancelBuyToLetPolicies _buyToLetPolicyCanceller;
+    private ICancelHouseholdPolicies _householdPolicyCanceller;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -25,8 +26,9 @@ public class InsuranceApiShould
         _householdPolicyRetriever = A.Fake<IRetrieveHouseholdPolicies>();
         _buyToLetPolicyRetriever = A.Fake<IRetrieveBuyToLetPolicies>();
         _buyToLetPolicyCanceller = A.Fake<ICancelBuyToLetPolicies>();
+        _householdPolicyCanceller = A.Fake<ICancelHouseholdPolicies>();
         _factory = new TestWebApplicationFactory<Program>(_houseHoldPolicySeller, _buyToLetPolicySeller,
-            _householdPolicyRetriever, _buyToLetPolicyRetriever, _buyToLetPolicyCanceller);
+            _householdPolicyRetriever, _buyToLetPolicyRetriever, _buyToLetPolicyCanceller, _householdPolicyCanceller);
         _httpClient = _factory.CreateClient();
     }
 
@@ -38,6 +40,7 @@ public class InsuranceApiShould
         Fake.Reset(_householdPolicyRetriever);
         Fake.Reset(_buyToLetPolicyRetriever);
         Fake.Reset(_buyToLetPolicyCanceller);
+        Fake.Reset(_householdPolicyCanceller);
     }
     
     [OneTimeTearDown]
@@ -134,6 +137,19 @@ public class InsuranceApiShould
             .Returns(Result.Success());
 
         var response = await _httpClient.DeleteAsync($"/policies/v1/buytolet/{policyReference}");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
+    }
+    
+    [Test]
+    public async Task CancelAHouseholdPolicy()
+    {
+        var policyReference = Guid.NewGuid();
+        
+        A.CallTo(() => _householdPolicyCanceller.Cancel(policyReference))
+            .Returns(Result.Success());
+
+        var response = await _httpClient.DeleteAsync($"/policies/v1/household/{policyReference}");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
     }
