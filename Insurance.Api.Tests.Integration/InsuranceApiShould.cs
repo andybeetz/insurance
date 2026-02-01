@@ -15,6 +15,7 @@ public class InsuranceApiShould
     private ISellBuyToLetPolicies _buyToLetPolicySeller;
     private IRetrieveHouseholdPolicies _householdPolicyRetriever;
     private IRetrieveBuyToLetPolicies _buyToLetPolicyRetriever;
+    private ICancelBuyToLetPolicies _buyToLetPolicyCanceller;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -23,8 +24,9 @@ public class InsuranceApiShould
         _buyToLetPolicySeller = A.Fake<ISellBuyToLetPolicies>();
         _householdPolicyRetriever = A.Fake<IRetrieveHouseholdPolicies>();
         _buyToLetPolicyRetriever = A.Fake<IRetrieveBuyToLetPolicies>();
+        _buyToLetPolicyCanceller = A.Fake<ICancelBuyToLetPolicies>();
         _factory = new TestWebApplicationFactory<Program>(_houseHoldPolicySeller, _buyToLetPolicySeller,
-            _householdPolicyRetriever, _buyToLetPolicyRetriever);
+            _householdPolicyRetriever, _buyToLetPolicyRetriever, _buyToLetPolicyCanceller);
         _httpClient = _factory.CreateClient();
     }
 
@@ -35,6 +37,7 @@ public class InsuranceApiShould
         Fake.Reset(_buyToLetPolicySeller);
         Fake.Reset(_householdPolicyRetriever);
         Fake.Reset(_buyToLetPolicyRetriever);
+        Fake.Reset(_buyToLetPolicyCanceller);
     }
     
     [OneTimeTearDown]
@@ -120,6 +123,19 @@ public class InsuranceApiShould
             var retrievedPolicy = await response.Content.ReadFromJsonAsync<BuyToLetPolicyDto>();
             Assert.That(retrievedPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
         });
+    }
+    
+    [Test]
+    public async Task CancelABuyToLetPolicy()
+    {
+        var policyReference = Guid.NewGuid();
+        
+        A.CallTo(() => _buyToLetPolicyCanceller.Cancel(policyReference))
+            .Returns(Result.Success());
+
+        var response = await _httpClient.DeleteAsync($"/policies/v1/buytolet/{policyReference}");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
     }
 
     private static HouseholdPolicyDto CreateAHouseholdPolicyDto(string policyReferenceString)
