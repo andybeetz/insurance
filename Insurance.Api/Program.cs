@@ -94,6 +94,17 @@ app.MapPatch("/policies/v1/household",
         return Results.BadRequest(result.Error);
     }).WithName("RenewHouseholdPolicy");
 
+app.MapPatch("/policies/v1/buytolet",
+    (BuyToLetPolicyDto policy, IRenewPolicies policyRenewer) =>
+    {
+        var result = policyRenewer.RenewBuyToLetPolicy(policy);
+
+        if (result.IsSuccess)
+            return Results.Ok(result.Value);
+        
+        return Results.BadRequest(result.Error);
+    }).WithName("RenewBuyToLetPolicy");
+
 
 app.UseHttpsRedirection();
 
