@@ -5,23 +5,13 @@ using Microsoft.Extensions.Hosting;
 
 namespace Insurance.Api.Tests.Integration.Helpers;
 
-public class TestWebApplicationFactory<TProgram>
-    : WebApplicationFactory<TProgram> where TProgram : class
+public class TestWebApplicationFactory<TProgram>(
+    ISellHouseholdPolicies householdPolicySeller,
+    ISellBuyToLetPolicies buyToLetPolicySeller,
+    IRetrieveHouseholdPolicies householdPolicyRetriever)
+    : WebApplicationFactory<TProgram>
+    where TProgram : class
 {
-    private readonly ISellHouseholdPolicies _householdPolicySeller;
-    private readonly ISellBuyToLetPolicies _buyToLetPolicySeller;
-    private readonly IRetrieveHouseholdPolicies _householdPolicyRetriever;
-
-    public TestWebApplicationFactory(
-        ISellHouseholdPolicies householdPolicySeller,
-        ISellBuyToLetPolicies buyToLetPolicySeller,
-        IRetrieveHouseholdPolicies householdPolicyRetriever)
-    {
-        _householdPolicySeller = householdPolicySeller;
-        _buyToLetPolicySeller = buyToLetPolicySeller;
-        _householdPolicyRetriever = householdPolicyRetriever;
-    }
-    
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.ConfigureHostConfiguration(config =>
@@ -31,9 +21,9 @@ public class TestWebApplicationFactory<TProgram>
 
         builder.ConfigureServices(services =>
         {
-            services.AddSingleton(_householdPolicySeller);
-            services.AddSingleton(_buyToLetPolicySeller);
-            services.AddSingleton(_householdPolicyRetriever);
+            services.AddSingleton(householdPolicySeller);
+            services.AddSingleton(buyToLetPolicySeller);
+            services.AddSingleton(householdPolicyRetriever);
         });
 
         return base.CreateHost(builder);
