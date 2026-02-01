@@ -15,6 +15,7 @@ public class InsuranceApiShould
     private ISellPolicies _policySeller;
     private IRetrievePolicies _policyRetriever;
     private ICancelPolicies _policyCanceller;
+    private IRenewPolicies _policyRenewer;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -22,7 +23,8 @@ public class InsuranceApiShould
         _policySeller = A.Fake<ISellPolicies>();
         _policyRetriever = A.Fake<IRetrievePolicies>();
         _policyCanceller = A.Fake<ICancelPolicies>();
-        _factory = new TestWebApplicationFactory<Program>(_policySeller, _policyRetriever, _policyCanceller);
+        _policyRenewer = A.Fake<IRenewPolicies>();
+        _factory = new TestWebApplicationFactory<Program>(_policySeller, _policyRetriever, _policyCanceller, _policyRenewer);
         _httpClient = _factory.CreateClient();
     }
 
@@ -32,6 +34,7 @@ public class InsuranceApiShould
         Fake.Reset(_policySeller);
         Fake.Reset(_policyRetriever);
         Fake.Reset(_policyCanceller);
+        Fake.Reset(_policyRenewer);
     }
     
     [OneTimeTearDown]
@@ -144,15 +147,47 @@ public class InsuranceApiShould
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
     }
+    
+    [Test]
+    public async Task RenewAHouseholdPolicy()
+    {
+        var newPolicy = CreateAHouseholdPolicyDto(Guid.NewGuid().ToString(), false);
+        var newPolicyRequest = newPolicy with
+        {
+            EndDate = newPolicy.EndDate.AddYears(1), Payments =
+            [
+                new PaymentDto
+                {
+                    PaymentReference = Guid.NewGuid(),
+                    PaymentType = "OnlineCard",
+                    Amount = 78.99m
+                }
+            ]
+        };
+        
+        // The result of the PATCH should be the renewed policy with the new payment added
+        var expectedPolicy = newPolicyRequest with { Payments = new[] { newPolicyRequest.Payments.First() }.Concat(newPolicy.Payments).ToArray() };
+        
+        A.CallTo(() => _policyRenewer.RenewHouseholdPolicy(A<HouseholdPolicyDto>._))
+            .ReturnsLazily(() => Resulting<HouseholdPolicyDto>.Success(expectedPolicy));
 
-    private static HouseholdPolicyDto CreateAHouseholdPolicyDto(string policyReferenceString)
+        var response = await _httpClient.PatchAsJsonAsync("/policies/v1/household", newPolicyRequest);
+
+        await Assert.MultipleAsync(async () =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            var renewedPolicy = await response.Content.ReadFromJsonAsync<HouseholdPolicyDto>();
+            Assert.That(renewedPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
+        });
+    }
+
+    private static HouseholdPolicyDto CreateAHouseholdPolicyDto(string policyReferenceString, bool autoRenew = true)
     {
         var startDate = new DateOnly(2021, 05, 01);
         var endDate = startDate.AddDays(365);
         var dateOfBirth = new DateOnly(205, 05, 17);
         var policyReference = new Guid(policyReferenceString);
         var paymentReference = new Guid("120B67E9-8430-437B-A45A-F0BDE2061D38");
-        var autoRenew = true;
 
         var expectedPolicy = new HouseholdPolicyDto
         {
