@@ -61,6 +61,17 @@ app.MapGet("/policies/v1/buytolet/{uniqueReference:guid}",
         return Results.NotFound(result.Error);
     }).WithName("RetrieveBuyToLetPolicy");
 
+app.MapDelete("/policies/v1/buytolet/{uniqueReference:guid}",
+    (Guid uniqueReference, ICancelBuyToLetPolicies policyCanceller) =>
+    {
+        var result = policyCanceller.Cancel(uniqueReference);
+
+        if (result.IsSuccess)
+            return Results.NoContent();
+
+        return Results.BadRequest(result.Error);
+    }).WithName("CancelBuyToLetPolicy");
+
 app.UseHttpsRedirection();
 
 app.Run();
