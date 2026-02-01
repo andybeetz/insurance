@@ -9,11 +9,13 @@ namespace Insurance.Api.Tests.Integration.Helpers;
 public class TestWebApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
 {
-    private readonly ISellHouseholdPolicies _policySeller;
+    private readonly ISellHouseholdPolicies _householdPolicySeller;
+    private readonly ISellBuyToLetPolicies _buyToLetPolicySeller;
 
-    public TestWebApplicationFactory(ISellHouseholdPolicies policySeller)
+    public TestWebApplicationFactory(ISellHouseholdPolicies householdPolicySeller, ISellBuyToLetPolicies buyToLetPolicySeller)
     {
-        _policySeller = policySeller;
+        _householdPolicySeller = householdPolicySeller;
+        _buyToLetPolicySeller = buyToLetPolicySeller;
     }
     
     protected override IHost CreateHost(IHostBuilder builder)
@@ -25,7 +27,8 @@ public class TestWebApplicationFactory<TProgram>
 
         builder.ConfigureServices(services =>
         {
-            services.AddSingleton(_policySeller);
+            services.AddSingleton(_householdPolicySeller);
+            services.AddSingleton(_buyToLetPolicySeller);
         });
 
         return base.CreateHost(builder);
