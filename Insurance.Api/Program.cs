@@ -1,5 +1,5 @@
-using Insurance.Api;
 using Insurance.Api.Dtos.v1;
+using Insurance.Api.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +16,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapPost("/policies/v1/household",
-    (HouseholdPolicyDto policy, ISellHouseholdPolicies policySeller) =>
+    (HouseholdPolicyDto policy, ISellPolicies policySeller) =>
     {
-        var result = policySeller.Sell(policy);
+        var result = policySeller.SellHouseholdPolicy(policy);
 
         if (result.IsSuccess)
             return Results.Created($"/policies/v1/household/{policy.UniqueReference}",
@@ -28,9 +28,9 @@ app.MapPost("/policies/v1/household",
     }).WithName("SellHouseholdPolicy");
 
 app.MapPost("/policies/v1/buytolet",
-    (BuyToLetPolicyDto policy, ISellBuyToLetPolicies policySeller) =>
+    (BuyToLetPolicyDto policy, ISellPolicies policySeller) =>
     {
-        var result = policySeller.Sell(policy);
+        var result = policySeller.SellBuyToLetPolicy(policy);
 
         if (result.IsSuccess)
             return Results.Created($"/policies/v1/buytolet/{policy.UniqueReference}",
@@ -40,9 +40,9 @@ app.MapPost("/policies/v1/buytolet",
     }).WithName("SellBuyToLetPolicy");
     
 app.MapGet("/policies/v1/household/{uniqueReference:guid}",
-    (Guid uniqueReference, IRetrieveHouseholdPolicies policyRetriever) =>
+    (Guid uniqueReference, IRetrievePolicies policyRetriever) =>
     {
-        var result = policyRetriever.Retrieve(uniqueReference);
+        var result = policyRetriever.RetrieveHouseholdPolicy(uniqueReference);
 
         if (result.IsSuccess)
             return Results.Ok(result.Value);
@@ -51,9 +51,9 @@ app.MapGet("/policies/v1/household/{uniqueReference:guid}",
     }).WithName("RetrieveHouseholdPolicy");
 
 app.MapGet("/policies/v1/buytolet/{uniqueReference:guid}",
-    (Guid uniqueReference, IRetrieveBuyToLetPolicies policyRetriever) =>
+    (Guid uniqueReference, IRetrievePolicies policyRetriever) =>
     {
-        var result = policyRetriever.Retrieve(uniqueReference);
+        var result = policyRetriever.RetrieveBuyToLetPolicy(uniqueReference);
 
         if (result.IsSuccess)
             return Results.Ok(result.Value);
@@ -62,9 +62,9 @@ app.MapGet("/policies/v1/buytolet/{uniqueReference:guid}",
     }).WithName("RetrieveBuyToLetPolicy");
 
 app.MapDelete("/policies/v1/buytolet/{uniqueReference:guid}",
-    (Guid uniqueReference, ICancelBuyToLetPolicies policyCanceller) =>
+    (Guid uniqueReference, ICancelPolicies policyCanceller) =>
     {
-        var result = policyCanceller.Cancel(uniqueReference);
+        var result = policyCanceller.CancelBuyToLetPolicy(uniqueReference);
 
         if (result.IsSuccess)
             return Results.NoContent();

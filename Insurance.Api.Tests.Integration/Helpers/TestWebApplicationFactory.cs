@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Insurance.Api.Interfaces;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -6,12 +7,9 @@ using Microsoft.Extensions.Hosting;
 namespace Insurance.Api.Tests.Integration.Helpers;
 
 public class TestWebApplicationFactory<TProgram>(
-    ISellHouseholdPolicies householdPolicySeller,
-    ISellBuyToLetPolicies buyToLetPolicySeller,
-    IRetrieveHouseholdPolicies householdPolicyRetriever,
-    IRetrieveBuyToLetPolicies buyToLetPolicyRetriever,
-    ICancelBuyToLetPolicies buyToLetPolicyCanceller,
-    ICancelHouseholdPolicies householdPolicyCanceller)
+    ISellPolicies policySeller,
+    IRetrievePolicies policyRetriever,
+    ICancelPolicies policyCanceller)
     : WebApplicationFactory<TProgram>
     where TProgram : class
 {
@@ -24,12 +22,9 @@ public class TestWebApplicationFactory<TProgram>(
 
         builder.ConfigureServices(services =>
         {
-            services.AddSingleton(householdPolicySeller);
-            services.AddSingleton(buyToLetPolicySeller);
-            services.AddSingleton(householdPolicyRetriever);
-            services.AddSingleton(buyToLetPolicyRetriever);
-            services.AddSingleton(buyToLetPolicyCanceller);
-            services.AddSingleton(householdPolicyCanceller);
+            services.AddSingleton(policySeller);
+            services.AddSingleton(policyRetriever);
+            services.AddSingleton(policyCanceller);
         });
 
         return base.CreateHost(builder);

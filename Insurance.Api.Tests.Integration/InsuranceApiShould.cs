@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using FakeItEasy;
 using Insurance.Api.Dtos.v1;
+using Insurance.Api.Interfaces;
 using Insurance.Api.Tests.Integration.Helpers;
 
 namespace Insurance.Api.Tests.Integration;
@@ -11,36 +12,26 @@ public class InsuranceApiShould
 {
     private TestWebApplicationFactory<Program> _factory;
     private HttpClient _httpClient;
-    private ISellHouseholdPolicies _houseHoldPolicySeller;
-    private ISellBuyToLetPolicies _buyToLetPolicySeller;
-    private IRetrieveHouseholdPolicies _householdPolicyRetriever;
-    private IRetrieveBuyToLetPolicies _buyToLetPolicyRetriever;
-    private ICancelBuyToLetPolicies _buyToLetPolicyCanceller;
-    private ICancelHouseholdPolicies _householdPolicyCanceller;
+    private ISellPolicies _policySeller;
+    private IRetrievePolicies _policyRetriever;
+    private ICancelPolicies _policyCanceller;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _houseHoldPolicySeller = A.Fake<ISellHouseholdPolicies>();
-        _buyToLetPolicySeller = A.Fake<ISellBuyToLetPolicies>();
-        _householdPolicyRetriever = A.Fake<IRetrieveHouseholdPolicies>();
-        _buyToLetPolicyRetriever = A.Fake<IRetrieveBuyToLetPolicies>();
-        _buyToLetPolicyCanceller = A.Fake<ICancelBuyToLetPolicies>();
-        _householdPolicyCanceller = A.Fake<ICancelHouseholdPolicies>();
-        _factory = new TestWebApplicationFactory<Program>(_houseHoldPolicySeller, _buyToLetPolicySeller,
-            _householdPolicyRetriever, _buyToLetPolicyRetriever, _buyToLetPolicyCanceller, _householdPolicyCanceller);
+        _policySeller = A.Fake<ISellPolicies>();
+        _policyRetriever = A.Fake<IRetrievePolicies>();
+        _policyCanceller = A.Fake<ICancelPolicies>();
+        _factory = new TestWebApplicationFactory<Program>(_policySeller, _policyRetriever, _policyCanceller);
         _httpClient = _factory.CreateClient();
     }
 
     [TearDown]
     public void TearDown()
     {
-        Fake.Reset(_houseHoldPolicySeller);
-        Fake.Reset(_buyToLetPolicySeller);
-        Fake.Reset(_householdPolicyRetriever);
-        Fake.Reset(_buyToLetPolicyRetriever);
-        Fake.Reset(_buyToLetPolicyCanceller);
-        Fake.Reset(_householdPolicyCanceller);
+        Fake.Reset(_policySeller);
+        Fake.Reset(_policyRetriever);
+        Fake.Reset(_policyCanceller);
     }
     
     [OneTimeTearDown]
@@ -57,7 +48,7 @@ public class InsuranceApiShould
         var expectedPolicy = CreateAHouseholdPolicyDto(policyReference);
         var newPolicyRequest = expectedPolicy with { UniqueReference = null };
         
-        A.CallTo(() => _houseHoldPolicySeller.Sell(A<HouseholdPolicyDto>._))
+        A.CallTo(() => _policySeller.SellHouseholdPolicy(A<HouseholdPolicyDto>._))
             .ReturnsLazily(() => Resulting<HouseholdPolicyDto>.Success(expectedPolicy));
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/household", newPolicyRequest);
@@ -77,7 +68,7 @@ public class InsuranceApiShould
         var expectedPolicy = CreateABuyToLetPolicyDto(policyReference);
         var newPolicyRequest = expectedPolicy with { UniqueReference = null };
         
-        A.CallTo(() => _buyToLetPolicySeller.Sell(A<BuyToLetPolicyDto>._))
+        A.CallTo(() => _policySeller.SellBuyToLetPolicy(A<BuyToLetPolicyDto>._))
             .ReturnsLazily(() => Resulting<BuyToLetPolicyDto>.Success(expectedPolicy));
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/buytolet", newPolicyRequest);
@@ -96,7 +87,7 @@ public class InsuranceApiShould
         var policyReference = Guid.NewGuid();
         var expectedPolicy = CreateAHouseholdPolicyDto(policyReference.ToString());
         
-        A.CallTo(() => _householdPolicyRetriever.Retrieve(policyReference))
+        A.CallTo(() => _policyRetriever.RetrieveHouseholdPolicy(policyReference))
             .Returns(Resulting<HouseholdPolicyDto>.Success(expectedPolicy));
 
         var response = await _httpClient.GetAsync($"/policies/v1/household/{policyReference}");
@@ -115,7 +106,7 @@ public class InsuranceApiShould
         var policyReference = Guid.NewGuid();
         var expectedPolicy = CreateABuyToLetPolicyDto(policyReference.ToString());
         
-        A.CallTo(() => _buyToLetPolicyRetriever.Retrieve(policyReference))
+        A.CallTo(() => _policyRetriever.RetrieveBuyToLetPolicy(policyReference))
             .Returns(Resulting<BuyToLetPolicyDto>.Success(expectedPolicy));
 
         var response = await _httpClient.GetAsync($"/policies/v1/buytolet/{policyReference}");
@@ -133,7 +124,7 @@ public class InsuranceApiShould
     {
         var policyReference = Guid.NewGuid();
         
-        A.CallTo(() => _buyToLetPolicyCanceller.Cancel(policyReference))
+        A.CallTo(() => _policyCanceller.CancelBuyToLetPolicy(policyReference))
             .Returns(Result.Success());
 
         var response = await _httpClient.DeleteAsync($"/policies/v1/buytolet/{policyReference}");
@@ -146,7 +137,7 @@ public class InsuranceApiShould
     {
         var policyReference = Guid.NewGuid();
         
-        A.CallTo(() => _householdPolicyCanceller.Cancel(policyReference))
+        A.CallTo(() => _policyCanceller.CancelHouseholdPolicy(policyReference))
             .Returns(Result.Success());
 
         var response = await _httpClient.DeleteAsync($"/policies/v1/household/{policyReference}");
