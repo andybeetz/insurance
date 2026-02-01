@@ -27,6 +27,18 @@ app.MapPost("/policies/v1/household",
         return Results.BadRequest(result.Error);
     }).WithName("SellHouseholdPolicy");
 
+app.MapPost("/policies/v1/buytolet",
+    (BuyToLetPolicyDto policy, ISellBuyToLetPolicies policySeller) =>
+    {
+        var result = policySeller.Sell(policy.ToDomain());
+
+        if (result.IsSuccess)
+            return Results.Created($"/policies/v1/buytolet/{policy.UniqueReference}",
+                policy with { UniqueReference = result.Value.UniqueReference });
+        
+        return Results.BadRequest(result.Error);
+    }).WithName("SellBuyToLetPolicy");
+
 app.UseHttpsRedirection();
 
 app.Run();
