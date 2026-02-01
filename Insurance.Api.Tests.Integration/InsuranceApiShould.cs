@@ -180,6 +180,39 @@ public class InsuranceApiShould
             Assert.That(renewedPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
         });
     }
+    
+    [Test]
+    public async Task RenewABuyToLetPolicy()
+    {
+        var newPolicy = CreateABuyToLetPolicyDto(Guid.NewGuid().ToString(), false);
+        var newPolicyRequest = newPolicy with
+        {
+            EndDate = newPolicy.EndDate.AddYears(1), Payments =
+            [
+                new PaymentDto
+                {
+                    PaymentReference = Guid.NewGuid(),
+                    PaymentType = "OnlineCard",
+                    Amount = 78.99m
+                }
+            ]
+        };
+        
+        // The result of the PATCH should be the renewed policy with the new payment added
+        var expectedPolicy = newPolicyRequest with { Payments = new[] { newPolicyRequest.Payments.First() }.Concat(newPolicy.Payments).ToArray() };
+        
+        A.CallTo(() => _policyRenewer.RenewBuyToLetPolicy(A<BuyToLetPolicyDto>._))
+            .ReturnsLazily(() => Resulting<BuyToLetPolicyDto>.Success(expectedPolicy));
+
+        var response = await _httpClient.PatchAsJsonAsync("/policies/v1/buytolet", newPolicyRequest);
+
+        await Assert.MultipleAsync(async () =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            var renewedPolicy = await response.Content.ReadFromJsonAsync<BuyToLetPolicyDto>();
+            Assert.That(renewedPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
+        });
+    }
 
     private static HouseholdPolicyDto CreateAHouseholdPolicyDto(string policyReferenceString, bool autoRenew = true)
     {
@@ -221,14 +254,13 @@ public class InsuranceApiShould
         return expectedPolicy;
     }
     
-    private static BuyToLetPolicyDto CreateABuyToLetPolicyDto(string policyReferenceString)
+    private static BuyToLetPolicyDto CreateABuyToLetPolicyDto(string policyReferenceString, bool autoRenew = true)
     {
         var startDate = new DateOnly(2021, 05, 01);
         var endDate = startDate.AddDays(365);
         var dateOfBirth = new DateOnly(205, 05, 17);
         var policyReference = new Guid(policyReferenceString);
         var paymentReference = new Guid("120B67E9-8430-437B-A45A-F0BDE2061D38");
-        var autoRenew = true;
 
         var expectedPolicy = new BuyToLetPolicyDto()
         {
