@@ -45,7 +45,7 @@ public class InsuranceApiShould
         var expectedPolicy = CreateAHouseholdPolicyDto(policyReference);
         var newPolicyRequest = expectedPolicy with { UniqueReference = null };
         
-        A.CallTo(() => _houseHoldPolicySeller.Sell(A<HouseholdPolicy>._))
+        A.CallTo(() => _houseHoldPolicySeller.Sell(A<HouseholdPolicyDto>._))
             .ReturnsLazily(() => Resulting<HouseholdPolicy>.Success(expectedPolicy.ToDomain()));
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/household", newPolicyRequest);
@@ -65,7 +65,7 @@ public class InsuranceApiShould
         var expectedPolicy = CreateABuyToLetPolicyDto(policyReference);
         var newPolicyRequest = expectedPolicy with { UniqueReference = null };
         
-        A.CallTo(() => _buyToLetPolicySeller.Sell(A<BuyToLetPolicy>._))
+        A.CallTo(() => _buyToLetPolicySeller.Sell(A<BuyToLetPolicyDto>._))
             .ReturnsLazily(() => Resulting<BuyToLetPolicy>.Success(expectedPolicy.ToDomain()));
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/buytolet", newPolicyRequest);
