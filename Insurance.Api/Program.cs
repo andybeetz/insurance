@@ -22,7 +22,7 @@ app.MapPost("/policies/v1/household",
 
         if (result.IsSuccess)
             return Results.Created($"/policies/v1/household/{policy.UniqueReference}",
-                policy with { UniqueReference = result.Value.UniqueReference });
+                result.Value);
         
         return Results.BadRequest(result.Error);
     }).WithName("SellHouseholdPolicy");
@@ -34,7 +34,7 @@ app.MapPost("/policies/v1/buytolet",
 
         if (result.IsSuccess)
             return Results.Created($"/policies/v1/buytolet/{policy.UniqueReference}",
-                policy with { UniqueReference = result.Value.UniqueReference });
+                result.Value);
         
         return Results.BadRequest(result.Error);
     }).WithName("SellBuyToLetPolicy");

@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using FakeItEasy;
-using Insurance.Api.Domain;
 using Insurance.Api.Dtos.v1;
 using Insurance.Api.Tests.Integration.Helpers;
 
@@ -46,7 +45,7 @@ public class InsuranceApiShould
         var newPolicyRequest = expectedPolicy with { UniqueReference = null };
         
         A.CallTo(() => _houseHoldPolicySeller.Sell(A<HouseholdPolicyDto>._))
-            .ReturnsLazily(() => Resulting<HouseholdPolicy>.Success(expectedPolicy.ToDomain()));
+            .ReturnsLazily(() => Resulting<HouseholdPolicyDto>.Success(expectedPolicy));
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/household", newPolicyRequest);
 
@@ -66,7 +65,7 @@ public class InsuranceApiShould
         var newPolicyRequest = expectedPolicy with { UniqueReference = null };
         
         A.CallTo(() => _buyToLetPolicySeller.Sell(A<BuyToLetPolicyDto>._))
-            .ReturnsLazily(() => Resulting<BuyToLetPolicy>.Success(expectedPolicy.ToDomain()));
+            .ReturnsLazily(() => Resulting<BuyToLetPolicyDto>.Success(expectedPolicy));
 
         var response = await _httpClient.PostAsJsonAsync("/policies/v1/buytolet", newPolicyRequest);
 

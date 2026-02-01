@@ -1,5 +1,4 @@
-﻿using Insurance.Api.Domain;
-using Insurance.Api.Dtos.v1;
+﻿using Insurance.Api.Dtos.v1;
 
 namespace Insurance.Api;
 
@@ -8,5 +7,5 @@ namespace Insurance.Api;
 /// </summary>
 public interface ISellHouseholdPolicies
 {
-    Resulting<HouseholdPolicy> Sell(HouseholdPolicyDto policy);
+    Resulting<HouseholdPolicyDto> Sell(HouseholdPolicyDto policy);
 }
