@@ -83,6 +83,17 @@ app.MapDelete("/policies/v1/household/{uniqueReference:guid}",
         return Results.BadRequest(result.Error);
     }).WithName("CancelHouseholdPolicy");
 
+app.MapPatch("/policies/v1/household",
+    (HouseholdPolicyDto policy, IRenewPolicies policyRenewer) =>
+    {
+        var result = policyRenewer.RenewHouseholdPolicy(policy);
+
+        if (result.IsSuccess)
+            return Results.Ok(result.Value);
+        
+        return Results.BadRequest(result.Error);
+    }).WithName("RenewHouseholdPolicy");
+
 
 app.UseHttpsRedirection();
 
