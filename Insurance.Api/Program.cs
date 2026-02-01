@@ -38,6 +38,17 @@ app.MapPost("/policies/v1/buytolet",
         
         return Results.BadRequest(result.Error);
     }).WithName("SellBuyToLetPolicy");
+    
+app.MapGet("/policies/v1/household/{uniqueReference:guid}",
+    (Guid uniqueReference, IRetrieveHouseholdPolicies policyRetriever) =>
+    {
+        var result = policyRetriever.Retrieve(uniqueReference);
+
+        if (result.IsSuccess)
+            return Results.Ok(result.Value);
+
+        return Results.NotFound(result.Error);
+    }).WithName("RetrieveHouseholdPolicy");
 
 app.UseHttpsRedirection();
 
