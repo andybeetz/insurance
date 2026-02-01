@@ -8,7 +8,8 @@ namespace Insurance.Api.Tests.Integration.Helpers;
 public class TestWebApplicationFactory<TProgram>(
     ISellHouseholdPolicies householdPolicySeller,
     ISellBuyToLetPolicies buyToLetPolicySeller,
-    IRetrieveHouseholdPolicies householdPolicyRetriever)
+    IRetrieveHouseholdPolicies householdPolicyRetriever,
+    IRetrieveBuyToLetPolicies buyToLetPolicyRetriever)
     : WebApplicationFactory<TProgram>
     where TProgram : class
 {
@@ -24,6 +25,7 @@ public class TestWebApplicationFactory<TProgram>(
             services.AddSingleton(householdPolicySeller);
             services.AddSingleton(buyToLetPolicySeller);
             services.AddSingleton(householdPolicyRetriever);
+            services.AddSingleton(buyToLetPolicyRetriever);
         });
 
         return base.CreateHost(builder);
