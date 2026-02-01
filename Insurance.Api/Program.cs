@@ -50,6 +50,17 @@ app.MapGet("/policies/v1/household/{uniqueReference:guid}",
         return Results.NotFound(result.Error);
     }).WithName("RetrieveHouseholdPolicy");
 
+app.MapGet("/policies/v1/buytolet/{uniqueReference:guid}",
+    (Guid uniqueReference, IRetrieveBuyToLetPolicies policyRetriever) =>
+    {
+        var result = policyRetriever.Retrieve(uniqueReference);
+
+        if (result.IsSuccess)
+            return Results.Ok(result.Value);
+
+        return Results.NotFound(result.Error);
+    }).WithName("RetrieveBuyToLetPolicy");
+
 app.UseHttpsRedirection();
 
 app.Run();
