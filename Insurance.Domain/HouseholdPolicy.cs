@@ -5,8 +5,7 @@ public sealed class HouseholdPolicy : Policy
     private HouseholdPolicy() { }
 
     public static Resulting<HouseholdPolicy> Sell(
-        DateOnly startDate,
-        DateOnly endDate,
+        PolicyPeriod period,
         Money amount,
         bool hasClaims,
         bool autoRenew,
@@ -17,8 +16,7 @@ public sealed class HouseholdPolicy : Policy
         var policy = new HouseholdPolicy
         {
             UniqueReference = Guid.NewGuid(),
-            StartDate = startDate,
-            EndDate = endDate,
+            Period = period,
             Amount = amount,
             HasClaims = hasClaims,
             AutoRenew = autoRenew,

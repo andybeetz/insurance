@@ -16,12 +16,15 @@ public class HouseholdPolicyShould
             addressLine3: null,
             postCode: "ZZ1 1ZZ");
 
+        var policyPeriodResult = PolicyPeriod.Create(
+            startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date),
+            endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(365)));
+
         Assume.That(policyHolderResult.IsSuccess, Is.True);
         Assume.That(propertyResult.IsSuccess, Is.True);
 
         var newPolicy = HouseholdPolicy.Sell(
-            startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date),
-            endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(365)),
+            period: policyPeriodResult.Value,
             amount: Money.Create(0m).Value,
             hasClaims: false,
             autoRenew: false,
