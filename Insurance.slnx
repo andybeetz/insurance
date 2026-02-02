@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="Insurance.Api.Tests.Integration/Insurance.Api.Tests.Integration.csproj" />
+  <Project Path="Insurance.Api.Tests.Unit/Insurance.Api.Tests.Unit.csproj" />
   <Project Path="Insurance.Api/Insurance.Api.csproj" />
   <Project Path="Insurance.Domain.Tests.Unit/Insurance.Domain.Tests.Unit.csproj" />
   <Project Path="Insurance.Domain/Insurance.Domain.csproj" />
