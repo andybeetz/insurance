@@ -90,7 +90,7 @@ public static class PolicySellingShould
     {
         var period = PolicyPeriod.Create(
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date),
-            endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(365))).Value;
+            endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(1))).Value;
 
         var amount = Money.Create(0m).Value;
 
@@ -118,9 +118,10 @@ public static class PolicySellingShould
     public static void CannotSellANewPolicyMoreThanSixtyDaysInAdvance(
         Func<PolicyPeriod, Money, bool, bool, PolicyHolders, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>> sell)
     {
+        var startDate = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(61));
         var period = PolicyPeriod.Create(
-            startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(61)),
-            endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(365 + 61))).Value;
+            startDate: startDate,
+            endDate: startDate.AddYears(1)).Value;
 
         var amount = Money.Create(10m).Value;
 

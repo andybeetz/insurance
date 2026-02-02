@@ -19,7 +19,7 @@ public class BuyToLetPolicyShould
 
         var policyPeriodResult = PolicyPeriod.Create(
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date),
-            endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(365)));
+            endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(1)));
 
         Assume.That(policyHolderResult.IsSuccess, Is.True);
         Assume.That(propertyResult.IsSuccess, Is.True);

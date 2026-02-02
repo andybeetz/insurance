@@ -218,7 +218,7 @@ public class InsuranceApiShould
     private static HouseholdPolicyDto CreateAHouseholdPolicyDto(string policyReferenceString, bool autoRenew = true)
     {
         var startDate = new DateOnly(2021, 05, 01);
-        var endDate = startDate.AddDays(365);
+        var endDate = startDate.AddYears(1);
         var dateOfBirth = new DateOnly(205, 05, 17);
         var policyReference = new Guid(policyReferenceString);
         var paymentReference = new Guid("120B67E9-8430-437B-A45A-F0BDE2061D38");
@@ -258,7 +258,7 @@ public class InsuranceApiShould
     private static BuyToLetPolicyDto CreateABuyToLetPolicyDto(string policyReferenceString, bool autoRenew = true)
     {
         var startDate = new DateOnly(2021, 05, 01);
-        var endDate = startDate.AddDays(365);
+        var endDate = startDate.AddYears(1);
         var dateOfBirth = new DateOnly(205, 05, 17);
         var policyReference = new Guid(policyReferenceString);
         var paymentReference = new Guid("120B67E9-8430-437B-A45A-F0BDE2061D38");
