@@ -1,4 +1,6 @@
-﻿namespace Insurance.Domain.Helpers;
+﻿using Insurance.Domain.Interfaces;
+
+namespace Insurance.Domain.Helpers;
 
 internal static class PolicySelling
 {
@@ -10,14 +12,23 @@ internal static class PolicySelling
         PolicyHolder policyHolder,
         InsuredProperty property,
         IReadOnlyCollection<PolicyPayment> payments,
-        Func<Guid, PolicyPeriod, Money, bool, bool, PolicyHolder, InsuredProperty, IReadOnlyCollection<PolicyPayment>, TPolicy> create)
+        Func<Guid, PolicyPeriod, Money, bool, bool, PolicyHolder, InsuredProperty, IReadOnlyCollection<PolicyPayment>, TPolicy> create,
+        IAmAClock? clock = null)
         where TPolicy : Policy
     {
         if (payments is null)
             return Error.Validation("policy.payments.required", "Payments are required.");
+        
+        clock ??= new SystemClock();
+        
+        // enforce not selling policies more than 60 days in advance
+        var latestAllowedStart = clock.Today.AddDays(60);
+        if (period.StartDate > latestAllowedStart)
+            return Error.Validation(
+                "policy.startDate.tooFarInAdvance",
+                "Policies cannot be sold more than 60 days in advance.");
 
-        // Money is a value object; if you enforce non-negative in Money.Create,
-        // you can remove amount checks from policies entirely.
+        // Using Guid.NewGuid for unique references, collisions are highly unlikely
         return Resulting<TPolicy>.Success(
             create(Guid.NewGuid(), period, amount, hasClaims, autoRenew, policyHolder, property, payments));
     }
