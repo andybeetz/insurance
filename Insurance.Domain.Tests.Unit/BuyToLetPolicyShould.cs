@@ -29,7 +29,7 @@ public class BuyToLetPolicyShould
             amount: Money.Create(0m).Value,
             hasClaims: false,
             autoRenew: false,
-            policyHolders: [policyHolderResult.Value],
+            policyHolders: PolicyHolders.Create([policyHolderResult.Value]).Value,
             property: propertyResult.Value,
             payments: Array.Empty<PolicyPayment>());
 

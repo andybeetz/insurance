@@ -9,7 +9,7 @@ public static class PolicySellingShould
             Money amount,
             bool hasClaims,
             bool autoRenew,
-            IReadOnlyCollection<PolicyHolder> holders,
+            PolicyHolders holders,
             InsuredProperty property,
             IReadOnlyCollection<PolicyPayment> payments)
         {
@@ -24,7 +24,7 @@ public static class PolicySellingShould
             Money amount,
             bool hasClaims,
             bool autoRenew,
-            IReadOnlyCollection<PolicyHolder> holders,
+            PolicyHolders holders,
             InsuredProperty property,
             IReadOnlyCollection<PolicyPayment> payments)
         {
@@ -35,11 +35,11 @@ public static class PolicySellingShould
         }
 
         yield return new TestCaseData(
-                (Func<PolicyPeriod, Money, bool, bool, IReadOnlyCollection<PolicyHolder>, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>>)SellHousehold)
+                (Func<PolicyPeriod, Money, bool, bool, PolicyHolders, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>>)SellHousehold)
             .SetName("Sell should create a HouseholdPolicy with a UniqueReference");
 
         yield return new TestCaseData(
-                (Func<PolicyPeriod, Money, bool, bool, IReadOnlyCollection<PolicyHolder>, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>>)SellBuyToLet)
+                (Func<PolicyPeriod, Money, bool, bool, PolicyHolders, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>>)SellBuyToLet)
             .SetName("Sell should create a BuyToLetPolicy with a UniqueReference");
     }
     
@@ -50,7 +50,7 @@ public static class PolicySellingShould
             Money amount,
             bool hasClaims,
             bool autoRenew,
-            IReadOnlyCollection<PolicyHolder> holders,
+            PolicyHolders holders,
             InsuredProperty property,
             IReadOnlyCollection<PolicyPayment> payments)
         {
@@ -65,7 +65,7 @@ public static class PolicySellingShould
             Money amount,
             bool hasClaims,
             bool autoRenew,
-            IReadOnlyCollection<PolicyHolder> holders,
+            PolicyHolders holders,
             InsuredProperty property,
             IReadOnlyCollection<PolicyPayment> payments)
         {
@@ -76,17 +76,17 @@ public static class PolicySellingShould
         }
 
         yield return new TestCaseData(
-                (Func<PolicyPeriod, Money, bool, bool, IReadOnlyCollection<PolicyHolder>, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>>)SellHousehold)
+                (Func<PolicyPeriod, Money, bool, bool, PolicyHolders, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>>)SellHousehold)
             .SetName("Sell should not create a HouseholdPolicy more than 60 days in advance");
 
         yield return new TestCaseData(
-                (Func<PolicyPeriod, Money, bool, bool, IReadOnlyCollection<PolicyHolder>, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>>)SellBuyToLet)
+                (Func<PolicyPeriod, Money, bool, bool, PolicyHolders, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>>)SellBuyToLet)
             .SetName("Sell should not create a BuyToLetPolicy more than 60 days in advance");
     }
 
     [TestCaseSource(nameof(SellCases))]
     public static void SellANewPolicyWithUniqueReference(
-        Func<PolicyPeriod, Money, bool, bool, IReadOnlyCollection<PolicyHolder>, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>> sell)
+        Func<PolicyPeriod, Money, bool, bool, PolicyHolders, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>> sell)
     {
         var period = PolicyPeriod.Create(
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date),
@@ -105,7 +105,7 @@ public static class PolicySellingShould
             addressLine3: null,
             postCode: "ZZ1 1ZZ").Value;
 
-        var result = sell(period, amount, false, false, [holder], property, Array.Empty<PolicyPayment>());
+        var result = sell(period, amount, false, false, PolicyHolders.Create([holder]).Value, property, Array.Empty<PolicyPayment>());
 
         using (Assert.EnterMultipleScope())
         {
@@ -116,7 +116,7 @@ public static class PolicySellingShould
     
     [TestCaseSource(nameof(SixtyDayCases))]
     public static void CannotSellANewPolicyMoreThanSixtyDaysInAdvance(
-        Func<PolicyPeriod, Money, bool, bool, IReadOnlyCollection<PolicyHolder>, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>> sell)
+        Func<PolicyPeriod, Money, bool, bool, PolicyHolders, InsuredProperty, IReadOnlyCollection<PolicyPayment>, Resulting<Policy>> sell)
     {
         var period = PolicyPeriod.Create(
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(61)),
@@ -135,7 +135,7 @@ public static class PolicySellingShould
             addressLine3: null,
             postCode: "ZZ1 1ZZ").Value;
 
-        var result = sell(period, amount, false, false, [holder], property, Array.Empty<PolicyPayment>());
+        var result = sell(period, amount, false, false, PolicyHolders.Create([holder]).Value, property, Array.Empty<PolicyPayment>());
 
         using (Assert.EnterMultipleScope())
         {

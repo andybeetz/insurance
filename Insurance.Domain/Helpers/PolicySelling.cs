@@ -9,10 +9,10 @@ internal static class PolicySelling
         Money amount,
         bool hasClaims,
         bool autoRenew,
-        IReadOnlyCollection<PolicyHolder> policyHolders,
+        PolicyHolders policyHolders,
         InsuredProperty property,
         IReadOnlyCollection<PolicyPayment> payments,
-        Func<Guid, PolicyPeriod, Money, bool, bool, IReadOnlyCollection<PolicyHolder>, InsuredProperty, IReadOnlyCollection<PolicyPayment>, TPolicy> create,
+        Func<Guid, PolicyPeriod, Money, bool, bool, PolicyHolders, InsuredProperty, IReadOnlyCollection<PolicyPayment>, TPolicy> create,
         IAmAClock? clock = null)
         where TPolicy : Policy
     {

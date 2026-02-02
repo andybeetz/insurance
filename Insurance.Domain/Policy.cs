@@ -8,7 +8,7 @@ public abstract class Policy
         Money amount,
         bool hasClaims,
         bool autoRenew,
-        IReadOnlyCollection<PolicyHolder> policyHolders,
+        PolicyHolders policyHolders,
         InsuredProperty property,
         IReadOnlyCollection<PolicyPayment> payments)
     {
@@ -27,7 +27,7 @@ public abstract class Policy
     public Money Amount { get; private set; }
     public bool HasClaims { get; private set; }
     public bool AutoRenew { get; private set; }
-    public IReadOnlyCollection<PolicyHolder> PolicyHolders { get; private set; }
+    public PolicyHolders PolicyHolders { get; private set; }
     public InsuredProperty Property { get; private set; }
     public IReadOnlyCollection<PolicyPayment> Payments { get; private set; }
 }

@@ -10,7 +10,7 @@ public sealed class HouseholdPolicy : Policy
         Money amount,
         bool hasClaims,
         bool autoRenew,
-        IReadOnlyCollection<PolicyHolder> policyHolders,
+        PolicyHolders policyHolders,
         InsuredProperty property,
         IReadOnlyCollection<PolicyPayment> payments)
         : base(uniqueReference, period, amount, hasClaims, autoRenew, policyHolders, property, payments) { }
@@ -20,7 +20,7 @@ public sealed class HouseholdPolicy : Policy
         Money amount,
         bool hasClaims,
         bool autoRenew,
-        IReadOnlyCollection<PolicyHolder> policyHolders,
+        PolicyHolders policyHolders,
         InsuredProperty property,
         IReadOnlyCollection<PolicyPayment> payments)
     {
