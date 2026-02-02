@@ -1,0 +1,38 @@
+﻿namespace Insurance.Domain.Tests.Unit;
+
+public class HouseholdPolicyShould
+{
+    [Test]
+    public void SellANewHouseholdPolicy()
+    {
+        var policyHolderResult = PolicyHolder.Create(
+            firstName: "Test",
+            lastName: "User",
+            dateOfBirth: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(-30)));
+
+        var propertyResult = InsuredProperty.Create(
+            addressLine1: "1 Test Street",
+            addressLine2: null,
+            addressLine3: null,
+            postCode: "ZZ1 1ZZ");
+
+        Assume.That(policyHolderResult.IsSuccess, Is.True);
+        Assume.That(propertyResult.IsSuccess, Is.True);
+
+        var newPolicy = HouseholdPolicy.Sell(
+            startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date),
+            endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(365)),
+            amount: 0m,
+            hasClaims: false,
+            autoRenew: false,
+            policyHolder: policyHolderResult.Value,
+            property: propertyResult.Value,
+            payments: Array.Empty<PolicyPayment>());
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(newPolicy.IsSuccess);
+            Assert.That(newPolicy.Value.UniqueReference, Is.Not.EqualTo(Guid.Empty));
+        }
+    }
+}
