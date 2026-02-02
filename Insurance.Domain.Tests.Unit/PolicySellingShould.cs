@@ -105,7 +105,7 @@ public static class PolicySellingShould
             addressLine3: null,
             postCode: "ZZ1 1ZZ").Value;
 
-        var result = sell(period, amount, false, false, PolicyHolders.Create([holder]).Value, property, Array.Empty<PolicyPayment>());
+        var result = sell(period, amount, false, false, PolicyHolders.Create([holder], period.StartDate).Value, property, Array.Empty<PolicyPayment>());
 
         using (Assert.EnterMultipleScope())
         {
@@ -135,7 +135,7 @@ public static class PolicySellingShould
             addressLine3: null,
             postCode: "ZZ1 1ZZ").Value;
 
-        var result = sell(period, amount, false, false, PolicyHolders.Create([holder]).Value, property, Array.Empty<PolicyPayment>());
+        var result = sell(period, amount, false, false, PolicyHolders.Create([holder], period.StartDate).Value, property, Array.Empty<PolicyPayment>());
 
         using (Assert.EnterMultipleScope())
         {

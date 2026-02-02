@@ -28,7 +28,7 @@ public class HouseholdPolicyShould
             amount: Money.Create(0m).Value,
             hasClaims: false,
             autoRenew: false,
-            policyHolders: PolicyHolders.Create([policyHolderResult.Value]).Value,
+            policyHolders: PolicyHolders.Create([policyHolderResult.Value], policyPeriodResult.Value.StartDate).Value,
             property: propertyResult.Value,
             payments: Array.Empty<PolicyPayment>());
 
