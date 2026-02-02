@@ -231,12 +231,12 @@ public class InsuranceApiShould
             Amount = 120000m,
             HasClaims = false,
             AutoRenew = autoRenew,
-            PolicyHolder = new PolicyHolderDto
+            PolicyHolders = [new PolicyHolderDto
             {
                 FirstName = "Fred",
                 LastName = "Flintstone",
                 DateOfBirth = dateOfBirth
-            },
+            }],
             Property = new PropertyDto
             {
                 AddressLine1 = "123 Main Street",
@@ -271,12 +271,12 @@ public class InsuranceApiShould
             Amount = 120000m,
             HasClaims = false,
             AutoRenew = autoRenew,
-            PolicyHolder = new PolicyHolderDto
+            PolicyHolders = [new PolicyHolderDto
             {
                 FirstName = "Fred",
                 LastName = "Flintstone",
                 DateOfBirth = dateOfBirth
-            },
+            }],
             Property = new PropertyDto
             {
                 AddressLine1 = "123 Main Street",

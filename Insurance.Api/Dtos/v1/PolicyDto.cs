@@ -11,7 +11,9 @@ public abstract record PolicyDto
     public Resulting<Money> ToMoney() => Money.Create(Amount);
     public required bool HasClaims { get; init; }
     public required bool AutoRenew { get; init; }
-    public required PolicyHolderDto PolicyHolder { get; init; }
+
+    public required IReadOnlyCollection<PolicyHolderDto> PolicyHolders { get; init; }
+
     public required PropertyDto Property { get; init; }
     public required IReadOnlyCollection<PaymentDto> Payments { get; init; }
 }
