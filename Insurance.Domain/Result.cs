@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Insurance.Api;
+namespace Insurance.Domain;
 
 public enum ErrorType
 {

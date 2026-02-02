@@ -4,6 +4,7 @@ using FakeItEasy;
 using Insurance.Api.Dtos.v1;
 using Insurance.Api.Interfaces;
 using Insurance.Api.Tests.Integration.Helpers;
+using Insurance.Domain;
 
 namespace Insurance.Api.Tests.Integration;
 

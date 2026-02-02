@@ -1,4 +1,5 @@
 ﻿using Insurance.Api.Dtos.v1;
+using Insurance.Domain;
 
 namespace Insurance.Api.Interfaces;
 
