@@ -20,9 +20,11 @@ public class PolicyPeriodShould
         var result = PolicyPeriod.Create(
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date),
             endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(days)));
-        
-        Assert.That(result.IsSuccess, Is.False);
-        Assert.That(result.Error!.Code, Is.EqualTo("policy.period.invalidLength"));
-        Assert.That(result.Error!.Description, Is.Not.Null.Or.Empty);
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(result.IsSuccess, Is.False);
+            Assert.That(result.Error!.Code, Is.EqualTo("policy.period.invalidLength"));
+            Assert.That(result.Error!.Description, Is.Not.Null.Or.Empty);
+        }
     }
 }
