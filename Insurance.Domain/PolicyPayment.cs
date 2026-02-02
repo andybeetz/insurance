@@ -2,7 +2,7 @@
 
 public sealed record PolicyPayment
 {
-    private PolicyPayment(Guid paymentReference, string paymentType, decimal amount)
+    private PolicyPayment(Guid paymentReference, string paymentType, Money amount)
     {
         PaymentReference = paymentReference;
         PaymentType = paymentType;
@@ -11,7 +11,7 @@ public sealed record PolicyPayment
 
     public Guid PaymentReference { get; }
     public string PaymentType { get; }
-    public decimal Amount { get; }
+    public Money Amount { get; }
 
     public static Resulting<PolicyPayment> Create(Guid paymentReference, string paymentType, decimal amount)
     {
@@ -21,9 +21,10 @@ public sealed record PolicyPayment
         if (string.IsNullOrWhiteSpace(paymentType))
             return Error.Validation("payment.type.required", "PaymentType is required.");
 
-        if (amount < 0)
-            return Error.Validation("payment.amount.invalid", "Payment amount must be zero or greater.");
+        var moneyResult = Money.Create(amount);
+        if (!moneyResult.IsSuccess)
+            return moneyResult.Error!;
 
-        return Resulting<PolicyPayment>.Success(new PolicyPayment(paymentReference, paymentType.Trim(), amount));
+        return Resulting<PolicyPayment>.Success(new PolicyPayment(paymentReference, paymentType.Trim(), moneyResult.Value));
     }
 }

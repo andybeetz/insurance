@@ -7,7 +7,7 @@ public sealed class HouseholdPolicy : Policy
     public static Resulting<HouseholdPolicy> Sell(
         DateOnly startDate,
         DateOnly endDate,
-        decimal amount,
+        Money amount,
         bool hasClaims,
         bool autoRenew,
         PolicyHolder policyHolder,

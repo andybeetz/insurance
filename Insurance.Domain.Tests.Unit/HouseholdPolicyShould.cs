@@ -22,7 +22,7 @@ public class HouseholdPolicyShould
         var newPolicy = HouseholdPolicy.Sell(
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date),
             endDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(365)),
-            amount: 0m,
+            amount: Money.Create(0m).Value,
             hasClaims: false,
             autoRenew: false,
             policyHolder: policyHolderResult.Value,
