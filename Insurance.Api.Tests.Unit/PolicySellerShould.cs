@@ -19,11 +19,15 @@ public class PolicySellerShould
             Payments = [new PaymentDto { PaymentReference = Guid.NewGuid(), PaymentType = "Card", Amount = 50.00m }],
             Property = new PropertyDto
                 { AddressLine1 = "1 Test Street", AddressLine2 = null, AddressLine3 = null, PostCode = "ZZ1 1ZZ" },
-            PolicyHolder = new PolicyHolderDto
-            {
-                DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(-30)), FirstName = "Test",
-                LastName = "User"
-            }
+            PolicyHolders =
+            [
+                new PolicyHolderDto
+                {
+                    DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(-30)),
+                    FirstName = "Test",
+                    LastName = "User"
+                }
+            ]
         };
         var policySeller = new PolicySeller();
         
