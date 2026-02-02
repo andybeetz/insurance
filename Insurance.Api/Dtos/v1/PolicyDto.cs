@@ -1,4 +1,4 @@
-﻿using Insurance.Api.Domain;
+﻿using Insurance.Domain;
 
 namespace Insurance.Api.Dtos.v1;
 

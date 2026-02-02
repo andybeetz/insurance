@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Insurance.Api.Domain;
+namespace Insurance.Domain;
 
 public class InsuredProperty
 {

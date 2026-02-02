@@ -1,4 +1,4 @@
-﻿namespace Insurance.Api.Domain;
+﻿namespace Insurance.Domain;
 
 public class PolicyHolder
 {
