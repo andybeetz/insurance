@@ -1,8 +1,19 @@
-﻿namespace Insurance.Domain;
+﻿using Insurance.Domain.Helpers;
+
+namespace Insurance.Domain;
 
 public sealed class HouseholdPolicy : Policy
 {
-    private HouseholdPolicy() { }
+    private HouseholdPolicy(
+        Guid uniqueReference,
+        PolicyPeriod period,
+        Money amount,
+        bool hasClaims,
+        bool autoRenew,
+        PolicyHolder policyHolder,
+        InsuredProperty property,
+        IReadOnlyCollection<PolicyPayment> payments)
+        : base(uniqueReference, period, amount, hasClaims, autoRenew, policyHolder, property, payments) { }
 
     public static Resulting<HouseholdPolicy> Sell(
         PolicyPeriod period,
@@ -13,18 +24,17 @@ public sealed class HouseholdPolicy : Policy
         InsuredProperty property,
         IReadOnlyCollection<PolicyPayment> payments)
     {
-        var policy = new HouseholdPolicy
-        {
-            UniqueReference = Guid.NewGuid(),
-            Period = period,
-            Amount = amount,
-            HasClaims = hasClaims,
-            AutoRenew = autoRenew,
-            PolicyHolder = policyHolder,
-            Property = property,
-            Payments = payments
-        };
-
-        return Resulting<HouseholdPolicy>.Success(policy);
+        // Additional HouseholdPolicy validation here
+        
+        return PolicySelling.SellNew(
+            period,
+            amount,
+            hasClaims,
+            autoRenew,
+            policyHolder,
+            property,
+            payments,
+            (id, p, a, hc, ar, holder, prop, pay) =>
+                new HouseholdPolicy(id, p, a, hc, ar, holder, prop, pay));
     }
 }

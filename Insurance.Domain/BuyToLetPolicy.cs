@@ -1,8 +1,19 @@
-﻿namespace Insurance.Domain;
+﻿using Insurance.Domain.Helpers;
+
+namespace Insurance.Domain;
 
 public sealed class BuyToLetPolicy : Policy
 {
-    private BuyToLetPolicy() { }
+    private BuyToLetPolicy(
+        Guid uniqueReference,
+        PolicyPeriod period,
+        Money amount,
+        bool hasClaims,
+        bool autoRenew,
+        PolicyHolder policyHolder,
+        InsuredProperty property,
+        IReadOnlyCollection<PolicyPayment> payments)
+    : base(uniqueReference, period, amount, hasClaims, autoRenew, policyHolder, property, payments) { }
 
     public static Resulting<BuyToLetPolicy> Sell(
         PolicyPeriod period,
@@ -13,24 +24,17 @@ public sealed class BuyToLetPolicy : Policy
         InsuredProperty property,
         IReadOnlyCollection<PolicyPayment> payments)
     {
-        if (amount.Amount < 0)
-            return Error.Validation("policy.amount.invalid", "Amount must be zero or greater.");
-
-        if (payments is null)
-            return Error.Validation("policy.payments.required", "Payments are required.");
-
-        var policy = new BuyToLetPolicy
-        {
-            UniqueReference = Guid.NewGuid(),
-            Period = period,
-            Amount = amount,
-            HasClaims = hasClaims,
-            AutoRenew = autoRenew,
-            PolicyHolder = policyHolder,
-            Property = property,
-            Payments = payments
-        };
-
-        return Resulting<BuyToLetPolicy>.Success(policy);
+        // Additional BuyToLetPolicy validation here
+        
+        return PolicySelling.SellNew(
+            period,
+            amount,
+            hasClaims,
+            autoRenew,
+            policyHolder,
+            property,
+            payments,
+            (id, p, a, hc, ar, holder, prop, pay) =>
+                new BuyToLetPolicy(id, p, a, hc, ar, holder, prop, pay));
     }
 }
