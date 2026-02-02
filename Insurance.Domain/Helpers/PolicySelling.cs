@@ -9,10 +9,10 @@ internal static class PolicySelling
         Money amount,
         bool hasClaims,
         bool autoRenew,
-        PolicyHolder policyHolder,
+        IReadOnlyCollection<PolicyHolder> policyHolders,
         InsuredProperty property,
         IReadOnlyCollection<PolicyPayment> payments,
-        Func<Guid, PolicyPeriod, Money, bool, bool, PolicyHolder, InsuredProperty, IReadOnlyCollection<PolicyPayment>, TPolicy> create,
+        Func<Guid, PolicyPeriod, Money, bool, bool, IReadOnlyCollection<PolicyHolder>, InsuredProperty, IReadOnlyCollection<PolicyPayment>, TPolicy> create,
         IAmAClock? clock = null)
         where TPolicy : Policy
     {
@@ -30,6 +30,6 @@ internal static class PolicySelling
 
         // Using Guid.NewGuid for unique references, collisions are highly unlikely
         return Resulting<TPolicy>.Success(
-            create(Guid.NewGuid(), period, amount, hasClaims, autoRenew, policyHolder, property, payments));
+            create(Guid.NewGuid(), period, amount, hasClaims, autoRenew, policyHolders, property, payments));
     }
 }
