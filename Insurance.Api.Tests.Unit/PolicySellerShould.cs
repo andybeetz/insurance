@@ -32,8 +32,11 @@ public class PolicySellerShould
         var policySeller = new PolicySeller();
         
         var policyResult = policySeller.SellBuyToLetPolicy(newPolicyRequest);
-        
-        Assert.That(policyResult.IsSuccess, Is.True);
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(policyResult.IsSuccess, Is.True);
+            Assert.That(policyResult.Value.UniqueReference, Is.Not.EqualTo(Guid.Empty));
+        }
     }
     
     /// <summary>
