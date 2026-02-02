@@ -1,3 +1,4 @@
+using Insurance.Api;
 using Insurance.Api.Dtos.v1;
 using Insurance.Api.Interfaces;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddTransient<ISellPolicies, PolicySeller>();
 
 var app = builder.Build();
 
