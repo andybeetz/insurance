@@ -1,6 +1,4 @@
-﻿using Insurance.Domain;
-
-namespace Insurance.Api.Dtos.v1;
+﻿namespace Insurance.Api.Dtos.v1;
 
 public abstract record PolicyDto
 {
@@ -13,6 +11,4 @@ public abstract record PolicyDto
     public required PolicyHolderDto PolicyHolder { get; init; }
     public required PropertyDto Property { get; init; }
     public required IReadOnlyCollection<PaymentDto> Payments { get; init; }
-    
-    public abstract Policy ToDomain();
 }
