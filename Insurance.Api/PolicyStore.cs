@@ -42,11 +42,31 @@ public class PolicyStore : IStorePolicies
 
     public Resulting<BuyToLetPolicy> FetchBuyToLetPolicy(Guid uniqueReference)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // This might be real infrastructure that can throw in future
+            var policy = _buyToLetPolicies.Single(p => p.UniqueReference == uniqueReference);
+            return Resulting<BuyToLetPolicy>.Success(policy);
+        }
+        catch (Exception e)
+        {
+            // Log the exception here for diagnosis and return a failure
+            return Resulting<BuyToLetPolicy>.Failure(Error.NotFound("policy.store.notfound", "Policy not found."));
+        }
     }
 
     public Resulting<HouseholdPolicy> FetchHouseholdPolicy(Guid uniqueReference)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // This might be real infrastructure that can throw in future
+            var policy = _householdPolicies.Single(p => p.UniqueReference == uniqueReference);
+            return Resulting<HouseholdPolicy>.Success(policy);
+        }
+        catch (Exception e)
+        {
+            // Log the exception here for diagnosis and return a failure
+            return Resulting<HouseholdPolicy>.Failure(Error.NotFound("policy.store.notfound", "Policy not found."));
+        }
     }
 }
