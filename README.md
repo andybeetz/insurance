@@ -30,6 +30,8 @@ If you don’t see it:
 - ensure `ASPNETCORE_ENVIRONMENT=Development`
 - and rerun the API
 
+Once the API is running, you can visit http://localhost:5013/swagger/index.html to explore the API.
+
 ## API Endpoints (v1)
 
 Base paths:
