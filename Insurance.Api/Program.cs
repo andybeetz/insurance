@@ -1,3 +1,4 @@
+using Insurance.Application;
 using Insurance.Application.Dtos.v1;
 using Insurance.Application.Extensions;
 using Insurance.Application.Interfaces;
@@ -124,6 +125,7 @@ app.MapPatch("/policies/v1/buytolet",
 
 app.MapSwagger();
 
+SampleDataCreator.Seed(app.Services.GetRequiredService<IStorePolicies>());
 
 app.UseHttpsRedirection();
 
