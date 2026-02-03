@@ -15,7 +15,7 @@ public class FakePolicyStore : IStorePolicies
             // This might be real infrastructure that can throw in future
             _householdPolicies.Add(householdPolicy);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // Log the exception here for diagnosis and return a failure
             return Result.Failure(Error.Failure("policy.store.failed", "Failed to store policy."));
@@ -31,7 +31,7 @@ public class FakePolicyStore : IStorePolicies
             // This might be real infrastructure that can throw in future
             _buyToLetPolicies.Add(buyToLetPolicy);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // Log the exception here for diagnosis and return a failure
             return Result.Failure(Error.Failure("policy.store.failed", "Failed to store policy."));
@@ -48,7 +48,7 @@ public class FakePolicyStore : IStorePolicies
             var policy = _buyToLetPolicies.Single(p => p.UniqueReference == uniqueReference);
             return Resulting<BuyToLetPolicy>.Success(policy);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // Log the exception here for diagnosis and return a failure
             return Resulting<BuyToLetPolicy>.Failure(Error.NotFound("policy.store.notfound", "Policy not found."));
@@ -63,7 +63,7 @@ public class FakePolicyStore : IStorePolicies
             var policy = _householdPolicies.Single(p => p.UniqueReference == uniqueReference);
             return Resulting<HouseholdPolicy>.Success(policy);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // Log the exception here for diagnosis and return a failure
             return Resulting<HouseholdPolicy>.Failure(Error.NotFound("policy.store.notfound", "Policy not found."));
