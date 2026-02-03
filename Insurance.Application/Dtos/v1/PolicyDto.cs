@@ -1,6 +1,4 @@
-﻿using Insurance.Domain;
-
-namespace Insurance.Application.Dtos.v1;
+﻿namespace Insurance.Application.Dtos.v1;
 
 public abstract record PolicyDto
 {
@@ -8,7 +6,6 @@ public abstract record PolicyDto
     public required DateOnly StartDate { get; init; }
     public required DateOnly EndDate { get; init; }
     public required decimal Amount { get; init; }
-    public Resulting<Money> ToMoney() => Money.Create(Amount);
     public required bool HasClaims { get; init; }
     public required bool AutoRenew { get; init; }
 

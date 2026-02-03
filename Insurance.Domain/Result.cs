@@ -2,6 +2,9 @@
 
 namespace Insurance.Domain;
 
+// This probably belongs in Insurance.Core but right now it seems pointless to create a library to hold 
+// this one set of objects
+
 public enum ErrorType
 {
     Failure = 0,
@@ -101,23 +104,4 @@ public sealed class Resulting<TValue> : Result
 
     public new static Resulting<TValue> Failure(Error error) =>
         new(error);
-}
-
-public static class ResultExtensions
-{
-    public static T Match<T>(
-        this Result result,
-        Func<T> onSuccess,
-        Func<Error, T> onFailure)
-    {
-        return result.IsSuccess ? onSuccess() : onFailure(result.Error!);
-    }
-
-    public static T Match<T, TValue>(
-        this Resulting<TValue> result,
-        Func<TValue, T> onSuccess,
-        Func<Error, T> onFailure)
-    {
-        return result.IsSuccess ? onSuccess(result.Value) : onFailure(result.Error!);
-    }
 }
