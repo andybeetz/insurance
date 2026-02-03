@@ -1,6 +1,7 @@
 using Insurance.Api;
 using Insurance.Api.Dtos.v1;
 using Insurance.Api.Interfaces;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,13 @@ builder.Services.AddTransient<IRenewPolicies, PolicyRenewer>();
 // Update this registration when you want to use a 'real' data store
 builder.Services.AddSingleton<IStorePolicies>(new PolicyStore());
 
+// Add SwaggerGen so we can use the UI
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Insurance.Api", Version = "v1" });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,6 +29,13 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseSwagger();
+
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("v1/swagger.json", "Insurance.Api v1");
+});
 
 app.MapPost("/policies/v1/household",
     (HouseholdPolicyDto policy, ISellPolicies policySeller) =>
@@ -111,6 +126,8 @@ app.MapPatch("/policies/v1/buytolet",
         
         return Results.BadRequest(result.Error);
     }).WithName("RenewBuyToLetPolicy");
+
+app.MapSwagger();
 
 
 app.UseHttpsRedirection();
