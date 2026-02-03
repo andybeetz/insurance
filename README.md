@@ -15,6 +15,8 @@ dotnet run --project .\Insurance.Api\Insurance.Api.csproj
 ```
 The API will start on the at http://localhost:5013 and is configured by ASP.NET Core (launchsettings.json).
 
+The OpenAPI endpoint is http://localhost:5013/openapi/v1.json
+
 ### From Rider
 
 - Select the **Insurance.Api** run configuration
