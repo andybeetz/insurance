@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddTransient<ISellPolicies, PolicySeller>();
 builder.Services.AddTransient<IRetrievePolicies, PolicyRetriever>();
+builder.Services.AddTransient<ICancelPolicies, PolicyCanceller>();
+builder.Services.AddTransient<IRenewPolicies, PolicyRenewer>();
 // Update this registration when you want to use a 'real' data store
 builder.Services.AddSingleton<IStorePolicies>(new PolicyStore());
 
