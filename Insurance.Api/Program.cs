@@ -20,6 +20,16 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Seed in-memory store with sample policies (useful for manual testing)
+using (var scope = app.Services.CreateScope())
+{
+    var policyStore = scope.ServiceProvider.GetRequiredService<IStorePolicies>();
+    var report = SampleDataCreator.Seed(policyStore);
+
+    app.Logger.LogInformation("Seeded sample Household policies: {HouseholdIds}", string.Join(", ", report.HouseholdPolicyIds));
+    app.Logger.LogInformation("Seeded sample BuyToLet policies: {BuyToLetIds}", string.Join(", ", report.BuyToLetPolicyIds));
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -124,8 +134,6 @@ app.MapPatch("/policies/v1/buytolet",
     }).WithName("RenewBuyToLetPolicy");
 
 app.MapSwagger();
-
-SampleDataCreator.Seed(app.Services.GetRequiredService<IStorePolicies>());
 
 app.UseHttpsRedirection();
 

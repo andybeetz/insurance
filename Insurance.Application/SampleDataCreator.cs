@@ -5,40 +5,49 @@ namespace Insurance.Application;
 
 public static class SampleDataCreator
 {
-    public static void Seed(IStorePolicies policyStore)
+    public sealed record SeedReport(
+        IReadOnlyCollection<Guid> HouseholdPolicyIds,
+        IReadOnlyCollection<Guid> BuyToLetPolicyIds);
+
+    public static SeedReport Seed(IStorePolicies policyStore)
     {
+        var householdIds = new List<Guid>();
+        var buyToLetIds = new List<Guid>();
+
         // Create household policies
         // expired
-        StoreHousehold(policyStore,
+        householdIds.Add(StoreHousehold(policyStore,
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date).AddYears(-2), // ended ~1 year ago
             amount: 120.00m,
             autoRenew: true,
-            paymentType: "CARD");
+            paymentType: "CARD"));
 
         // expiring in 15 days (=> within 30-day renewal window)
-        StoreHousehold(policyStore,
+        householdIds.Add(StoreHousehold(policyStore,
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(15)).AddYears(-1),
             amount: 99.99m,
             autoRenew: true,
-            paymentType: "DIRECTDEBIT");
+            paymentType: "DIRECTDEBIT"));
 
         // Create buy to let policies
         // expired
-        StoreBuyToLet(policyStore,
+        buyToLetIds.Add(StoreBuyToLet(policyStore,
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date).AddYears(-3), // ended ~2 years ago
             amount: 250.00m,
             autoRenew: true,
-            paymentType: "CHEQUE");
+            paymentType: "CHEQUE"));
 
         // expiring in 15 days (=> within 30-day renewal window)
-        StoreBuyToLet(policyStore,
+        buyToLetIds.Add(StoreBuyToLet(policyStore,
             startDate: DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(15)).AddYears(-1),
             amount: 180.50m,
             autoRenew: true,
-            paymentType: "CARD");
+            paymentType: "CARD"));
+
+        return new SeedReport(householdIds, buyToLetIds);
     }
-    
-    private static void StoreHousehold(
+
+    private static Guid StoreHousehold(
         IStorePolicies policyStore,
         DateOnly startDate,
         decimal amount,
@@ -75,12 +84,13 @@ public static class SampleDataCreator
             payments: [initialPayment]);
 
         if (!sold.IsSuccess)
-            return; // keep seeding resilient; in a real app you’d log/throw
+            return Guid.Empty; // keep seeding resilient; in a real app you’d log/throw
 
         policyStore.StoreHouseholdPolicy(sold.Value);
+        return sold.Value.UniqueReference;
     }
 
-    private static void StoreBuyToLet(
+    private static Guid StoreBuyToLet(
         IStorePolicies policyStore,
         DateOnly startDate,
         decimal amount,
@@ -117,8 +127,9 @@ public static class SampleDataCreator
             payments: [initialPayment]);
 
         if (!sold.IsSuccess)
-            return; // keep seeding resilient; in a real app you’d log/throw
+            return Guid.Empty; // keep seeding resilient; in a real app you’d log/throw
 
         policyStore.StoreBuyToLetPolicy(sold.Value);
+        return sold.Value.UniqueReference;
     }
 }

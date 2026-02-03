@@ -21,6 +21,47 @@ The OpenAPI endpoint is http://localhost:5013/openapi/v1.json
 
 - Select the **Insurance.Api** run configuration
 - Click **Run** (or **Debug**)
+- 
+### Seeded sample policies (for manual renewal testing)
+
+When the API starts, it seeds the in-memory policy store with a few sample policies and logs their **UniqueReference** IDs.
+
+Look for log lines like:
+
+```
+Seeded sample Household policies: 04b85c45-ae24-4744-b8e1-55fba4b7db59, bd970234-411f-49a0-b4da-12256c9d709c
+Seeded sample BuyToLet policies: 1dc5f655-4001-4480-9e94-1c9fbf1037be, 2e98e788-0aa3-447c-8562-30699c0fed06
+```
+
+Use those GUIDs with the existing endpoints:
+
+- View policy details:
+    - `GET /policies/v1/household/{uniqueReference:guid}`
+    - `GET /policies/v1/buytolet/{uniqueReference:guid}`
+
+- Renew a policy:
+    - `PATCH /policies/v1/household`
+    - `PATCH /policies/v1/buytolet`
+
+Example (replace `<HOUSEHOLD_GUID_FROM_LOGS>` and `<PAYMENT_GUID>`):
+
+```
+GET http://localhost:5013/policies/v1/household/<HOUSEHOLD_GUID_FROM_LOGS>
+```
+
+```json
+{ 
+  "uniqueReference": "<HOUSEHOLD_GUID_FROM_LOGS>", 
+  "startDate": "2024-01-01", 
+  "endDate": "2025-01-01", 
+  "amount": 77.00, 
+  "hasClaims": false, 
+  "autoRenew": true, 
+  "policyHolders": [], 
+  "property": { "addressLine1": "1 Sample Street", "addressLine2": null, "addressLine3": null, "postCode": "ZZ1 1ZZ" }, 
+  "payments": []
+}
+```
 
 ### OpenAPI (Swagger)
 
