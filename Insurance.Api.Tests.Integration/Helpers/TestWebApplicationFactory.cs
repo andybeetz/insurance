@@ -10,7 +10,8 @@ public class TestWebApplicationFactory<TProgram>(
     ISellPolicies policySeller,
     IRetrievePolicies policyRetriever,
     ICancelPolicies policyCanceller,
-    IRenewPolicies policyRenewer)
+    IRenewPolicies policyRenewer,
+    IStorePolicies policyStore)
     : WebApplicationFactory<TProgram>
     where TProgram : class
 {
@@ -27,6 +28,7 @@ public class TestWebApplicationFactory<TProgram>(
             services.AddSingleton(policyRetriever);
             services.AddSingleton(policyCanceller);
             services.AddSingleton(policyRenewer);
+            services.AddSingleton(policyStore);
         });
 
         return base.CreateHost(builder);

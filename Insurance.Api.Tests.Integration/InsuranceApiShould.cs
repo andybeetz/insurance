@@ -17,6 +17,7 @@ public class InsuranceApiShould
     private IRetrievePolicies _policyRetriever;
     private ICancelPolicies _policyCanceller;
     private IRenewPolicies _policyRenewer;
+    private IStorePolicies _policyStore;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -25,7 +26,8 @@ public class InsuranceApiShould
         _policyRetriever = A.Fake<IRetrievePolicies>();
         _policyCanceller = A.Fake<ICancelPolicies>();
         _policyRenewer = A.Fake<IRenewPolicies>();
-        _factory = new TestWebApplicationFactory<Program>(_policySeller, _policyRetriever, _policyCanceller, _policyRenewer);
+        _policyStore = A.Fake<IStorePolicies>();
+        _factory = new TestWebApplicationFactory<Program>(_policySeller, _policyRetriever, _policyCanceller, _policyRenewer, _policyStore);
         _httpClient = _factory.CreateClient();
     }
 
@@ -36,6 +38,7 @@ public class InsuranceApiShould
         Fake.Reset(_policyRetriever);
         Fake.Reset(_policyCanceller);
         Fake.Reset(_policyRenewer);
+        Fake.Reset(_policyStore);
     }
     
     [OneTimeTearDown]
