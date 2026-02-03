@@ -1,6 +1,6 @@
 ﻿using Insurance.Domain;
 
-namespace Insurance.Api.Interfaces;
+namespace Insurance.Application.Interfaces;
 
 /// <summary>
 /// Abstraction that allows us to use Domain behaviour without cluttering the API endpoints

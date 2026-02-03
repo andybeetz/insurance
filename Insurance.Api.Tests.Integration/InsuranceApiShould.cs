@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using FakeItEasy;
-using Insurance.Api.Dtos.v1;
-using Insurance.Api.Interfaces;
 using Insurance.Api.Tests.Integration.Helpers;
+using Insurance.Application.Dtos.v1;
+using Insurance.Application.Interfaces;
 using Insurance.Domain;
 
 namespace Insurance.Api.Tests.Integration;

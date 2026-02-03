@@ -1,8 +1,8 @@
-﻿using Insurance.Api.Dtos.v1;
-using Insurance.Api.Interfaces;
+﻿using Insurance.Application.Dtos.v1;
+using Insurance.Application.Interfaces;
 using Insurance.Domain;
 
-namespace Insurance.Api;
+namespace Insurance.Application;
 
 public class PolicySeller(IStorePolicies policyStore) : ISellPolicies
 {

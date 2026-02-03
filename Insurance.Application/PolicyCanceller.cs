@@ -1,7 +1,7 @@
-﻿using Insurance.Api.Interfaces;
+﻿using Insurance.Application.Interfaces;
 using Insurance.Domain;
 
-namespace Insurance.Api;
+namespace Insurance.Application;
 
 public class PolicyCanceller : ICancelPolicies
 {

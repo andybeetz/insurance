@@ -1,6 +1,6 @@
 ﻿using Insurance.Domain;
 
-namespace Insurance.Api.Dtos.v1;
+namespace Insurance.Application.Dtos.v1;
 
 public abstract record PolicyDto
 {

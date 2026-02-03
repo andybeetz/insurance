@@ -1,8 +1,9 @@
-﻿using Insurance.Api.Dtos.v1;
-using Insurance.Api.Interfaces;
+﻿using Insurance.Application.Dtos.v1;
+using Insurance.Application.Extensions;
+using Insurance.Application.Interfaces;
 using Insurance.Domain;
 
-namespace Insurance.Api;
+namespace Insurance.Application;
 
 public class PolicyRetriever(IStorePolicies policyStore) : IRetrievePolicies
 {
@@ -13,7 +14,7 @@ public class PolicyRetriever(IStorePolicies policyStore) : IRetrievePolicies
         if (!policyResult.IsSuccess)
             return policyResult.Error ?? Error.Failure("policy.not.found", "Policy not found.");
 
-        return Resulting<BuyToLetPolicyDto>.Success(BuyToLetPolicyDto.FromDomain(policyResult.Value));
+        return Resulting<BuyToLetPolicyDto>.Success(policyResult.Value.ToDto());
     }
 
     public Resulting<HouseholdPolicyDto> RetrieveHouseholdPolicy(Guid uniqueReference)
@@ -23,6 +24,6 @@ public class PolicyRetriever(IStorePolicies policyStore) : IRetrievePolicies
         if (!policyResult.IsSuccess)
             return policyResult.Error ?? Error.Failure("policy.not.found", "Policy not found.");
 
-        return Resulting<HouseholdPolicyDto>.Success(HouseholdPolicyDto.FromDomain(policyResult.Value));
+        return Resulting<HouseholdPolicyDto>.Success(policyResult.Value.ToDto());
     }
 }

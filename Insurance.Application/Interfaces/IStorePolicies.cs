@@ -1,6 +1,6 @@
 ﻿using Insurance.Domain;
 
-namespace Insurance.Api.Interfaces;
+namespace Insurance.Application.Interfaces;
 
 public interface IStorePolicies
 {

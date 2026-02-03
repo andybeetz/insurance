@@ -1,7 +1,7 @@
-﻿using Insurance.Api.Dtos.v1;
+﻿using Insurance.Application.Dtos.v1;
 using Insurance.Domain;
 
-namespace Insurance.Api.Interfaces;
+namespace Insurance.Application.Interfaces;
 
 public interface IRenewPolicies
 {

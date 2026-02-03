@@ -1,4 +1,4 @@
-﻿using Insurance.Api.Interfaces;
+﻿using Insurance.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
