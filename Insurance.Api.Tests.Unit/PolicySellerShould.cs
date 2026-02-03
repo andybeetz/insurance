@@ -21,7 +21,7 @@ public class PolicySellerShould
     [Test]
     public void SellANewBuyToLetPolicy()
     {
-        var newPolicyRequest = CreateBuyToLetPolicyRequest();
+        var newPolicyRequest = CreateNewBuyToLetPolicyRequest();
 
         var policyResult = _policySeller.SellBuyToLetPolicy(newPolicyRequest);
 
@@ -38,7 +38,12 @@ public class PolicySellerShould
     [Test]
     public void NotSellABuyToLetPolicyWithAYoungPolicyHolder()
     {
-        var newPolicyRequest = CreateBuyToLetPolicyRequest();
+        var newPolicyRequest = CreateNewBuyToLetPolicyRequest(new PolicyHolderDto
+        {
+            DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(-15)),
+            FirstName = "Test",
+            LastName = "User"
+        });
 
         var policyResult = _policySeller.SellBuyToLetPolicy(newPolicyRequest);
 
@@ -118,7 +123,7 @@ public class PolicySellerShould
         return newPolicyRequest;
     }
     
-    private static BuyToLetPolicyDto CreateBuyToLetPolicyRequest()
+    private static BuyToLetPolicyDto CreateNewBuyToLetPolicyRequest(PolicyHolderDto? policyHolder = null)
     {
         var newPolicyRequest = new BuyToLetPolicyDto
         {
@@ -133,7 +138,7 @@ public class PolicySellerShould
                 { AddressLine1 = "1 Test Street", AddressLine2 = null, AddressLine3 = null, PostCode = "ZZ1 1ZZ" },
             PolicyHolders =
             [
-                new PolicyHolderDto
+                policyHolder ?? new PolicyHolderDto
                 {
                     DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(-30)),
                     FirstName = "Test",
