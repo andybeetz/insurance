@@ -51,6 +51,10 @@ public class PolicySeller(IStorePolicies policyStore) : ISellPolicies
 
         if (!soldResult.IsSuccess)
             return soldResult.Error!;
+        
+        var storeResult = policyStore.StoreBuyToLetPolicy(soldResult.Value);
+        if (!storeResult.IsSuccess)
+            return storeResult.Error ?? Error.Failure("policy.store.failed", "Failed to store policy.");
 
         return Resulting<BuyToLetPolicyDto>.Success(policy with
         {

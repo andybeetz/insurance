@@ -78,6 +78,20 @@ public class PolicySellerShould
             .MustHaveHappenedOnceExactly();
     }
     
+    [Test]
+    public void StoreASoldBuyToLetPolicy()
+    {
+        var newPolicyRequest = CreateNewBuyToLetPolicyRequest();
+
+        var policyResult = _policySeller.SellBuyToLetPolicy(newPolicyRequest);
+
+        Assert.That(policyResult.IsSuccess, Is.True);
+        A.CallTo(() =>
+                _policyStore.StoreBuyToLetPolicy(A<BuyToLetPolicy>.That.Matches(policy =>
+                    policy.UniqueReference == policyResult.Value.UniqueReference)))
+            .MustHaveHappenedOnceExactly();
+    }
+    
     private static HouseholdPolicyDto CreateNewHouseholdPolicyRequest()
     {
         var newPolicyRequest = new HouseholdPolicyDto
