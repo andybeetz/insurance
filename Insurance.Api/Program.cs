@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddTransient<ISellPolicies, PolicySeller>();
+builder.Services.AddTransient<IRetrievePolicies, PolicyRetriever>();
 // Update this registration when you want to use a 'real' data store
 builder.Services.AddSingleton<IStorePolicies>(new PolicyStore());
 
