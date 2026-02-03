@@ -4,7 +4,7 @@ using Insurance.Domain;
 
 namespace Insurance.Api;
 
-public class PolicySeller : ISellPolicies
+public class PolicySeller(IStorePolicies policyStore) : ISellPolicies
 {
     public Resulting<HouseholdPolicyDto> SellHouseholdPolicy(HouseholdPolicyDto policy)
     {
@@ -23,6 +23,10 @@ public class PolicySeller : ISellPolicies
 
         if (!soldResult.IsSuccess)
             return soldResult.Error!;
+        
+        var storeResult = policyStore.StoreHouseholdPolicy(soldResult.Value);
+        if (!storeResult.IsSuccess)
+            return storeResult.Error ?? Error.Failure("policy.store.failed", "Failed to store policy.");
 
         return Resulting<HouseholdPolicyDto>.Success(policy with
         {
