@@ -5,5 +5,5 @@ namespace Insurance.Api.Interfaces;
 public interface IStorePolicies
 {
     Result StoreHouseholdPolicy(HouseholdPolicy householdPolicy);
-    Result StoreBuyToLetPolicy(BuyToLetPolicy matches);
+    Result StoreBuyToLetPolicy(BuyToLetPolicy buyToLetPolicy);
 }
