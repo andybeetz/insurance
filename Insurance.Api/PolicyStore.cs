@@ -39,4 +39,14 @@ public class PolicyStore : IStorePolicies
         
         return Result.Success();
     }
+
+    public Resulting<BuyToLetPolicy> FetchBuyToLetPolicy(Guid uniqueReference)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Resulting<HouseholdPolicy> FetchHouseholdPolicy(Guid uniqueReference)
+    {
+        throw new NotImplementedException();
+    }
 }
