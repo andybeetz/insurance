@@ -1,4 +1,5 @@
 ﻿using Insurance.Application.Dtos.v1;
+using Insurance.Application.Tests.Unit.Fakes;
 using Insurance.Domain;
 using Insurance.Domain.Interfaces;
 
@@ -15,7 +16,7 @@ public class PolicyRenewerShould
     }
 
     private sealed record ArrangedPolicy(
-        PolicyStore Store,
+        FakePolicyStore Store,
         PolicyPeriod Period,
         PolicyHolder Holder,
         InsuredProperty Property,
@@ -119,7 +120,7 @@ public class PolicyRenewerShould
 
     private static ArrangedPolicy ArrangeStoredHouseholdPolicy()
     {
-        var store = new PolicyStore();
+        var store = new FakePolicyStore();
         var arranged = ArrangeCommon(store);
 
         var initialPayment = PolicyPayment.Create(
@@ -150,7 +151,7 @@ public class PolicyRenewerShould
 
     private static ArrangedPolicy ArrangeStoredBuyToLetPolicy()
     {
-        var store = new PolicyStore();
+        var store = new FakePolicyStore();
         var arranged = ArrangeCommon(store);
 
         var initialPayment = PolicyPayment.Create(
@@ -185,7 +186,7 @@ public class PolicyRenewerShould
         PolicyHolders Holders,
         InsuredProperty Property);
 
-    private static CommonArrange ArrangeCommon(PolicyStore _)
+    private static CommonArrange ArrangeCommon(FakePolicyStore _)
     {
         // Create a policy that is within the 30-day renewal window.
         var startDate = new DateOnly(2024, 01, 01);
