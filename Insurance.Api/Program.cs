@@ -43,7 +43,7 @@ app.MapPost("/policies/v1/household",
         var result = policySeller.SellHouseholdPolicy(policy);
 
         if (result.IsSuccess)
-            return Results.Created($"/policies/v1/household/{policy.UniqueReference}",
+            return Results.Created($"/policies/v1/household/{result.Value.UniqueReference}",
                 result.Value);
         
         return Results.BadRequest(result.Error);
@@ -55,7 +55,7 @@ app.MapPost("/policies/v1/buytolet",
         var result = policySeller.SellBuyToLetPolicy(policy);
 
         if (result.IsSuccess)
-            return Results.Created($"/policies/v1/buytolet/{policy.UniqueReference}",
+            return Results.Created($"/policies/v1/buytolet/{result.Value.UniqueReference}",
                 result.Value);
         
         return Results.BadRequest(result.Error);

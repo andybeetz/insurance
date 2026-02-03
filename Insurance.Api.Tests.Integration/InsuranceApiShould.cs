@@ -62,6 +62,8 @@ public class InsuranceApiShould
 
         await Assert.MultipleAsync(async () =>
         {
+            Assert.That(response.Headers.Location,
+                Is.EqualTo(new Uri($"/policies/v1/household/{expectedPolicy.UniqueReference}", UriKind.Relative)));
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
             var soldPolicy = await response.Content.ReadFromJsonAsync<HouseholdPolicyDto>();
             Assert.That(soldPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
@@ -82,6 +84,8 @@ public class InsuranceApiShould
 
         await Assert.MultipleAsync(async () =>
         {
+            Assert.That(response.Headers.Location,
+                Is.EqualTo(new Uri($"/policies/v1/buytolet/{expectedPolicy.UniqueReference}", UriKind.Relative)));
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
             var soldPolicy = await response.Content.ReadFromJsonAsync<BuyToLetPolicyDto>();
             Assert.That(soldPolicy, Is.EqualTo(expectedPolicy).UsingPropertiesComparer());
