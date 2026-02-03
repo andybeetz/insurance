@@ -37,4 +37,6 @@ public sealed class BuyToLetPolicy : Policy
             (id, p, a, hc, ar, holders, prop, pay) =>
                 new BuyToLetPolicy(id, p, a, hc, ar, holders, prop, pay));
     }
+    
+    // When fetching these from a 'real' data store, a factory method to 'rehydrate' policies will be required here
 }
